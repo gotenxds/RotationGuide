@@ -1,32 +1,52 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Animation;
 using Dalamud.Logging;
 using ImGuiNET;
+using RotationGuide.Services;
 using RotationGuide.Utils;
 
 
 namespace RotationGuide.Windows;
 
 public class MenuRenderer : Renderer
-{
-    public readonly Vector2 buttonSize = new(500, 100);
+{ 
     public event Action OnGoToCreateChooseJob;
-
+    private RotationListRenderer rotationListRenderer = new();
 
     public override void Render(Transition transition = Transition.None, float time = 0)
     {
         StyleTransitionBegin(transition, time);
 
-        var windowSize = ImGui.GetWindowSize();
-
-        ImGui.SetCursorPosX((windowSize.X / 2) - (buttonSize.X / 2));
-        ImGui.SetCursorPosY((windowSize.Y / 2) - (buttonSize.Y / 2) + BaseCursorHeight);
-
-        if (ImGui.Button("CREATE", buttonSize) && transition == Transition.None)
+        if (RotationDataService.GetAll().Any())
         {
-            OnGoToCreateChooseJob.Invoke();
+            rotationListRenderer.Render();
         }
+        else
+        {
+            var windowSize = ImGui.GetWindowSize();
+
+            var windowPos = ImGui.GetWindowPos();
+            var windowCenter = windowPos + (windowSize / 2) - new Vector2(350, 75);
+            var createButtonPos = windowCenter + new Vector2(236, 50);
+            var orUseAnPos = createButtonPos + new Vector2(100, 0);
+            var importButtonPos = createButtonPos + new Vector2(140, 0);
+
+            var imDrawListPtr = ImGui.GetWindowDrawList();
+            
+            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 44, windowCenter, Colors.FadedText, "You dont seem to have any rotations yet.");
+            ImGui.SetCursorScreenPos(createButtonPos);
+            if (ImGui.Button("Create"))
+            {
+                OnGoToCreateChooseJob.Invoke();
+            }
+            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 44, orUseAnPos, Colors.FadedText, "/");
+            ImGui.SetCursorScreenPos(importButtonPos);
+            ImGui.Button("Import");
+        }
+
+        
 
         StyleTransitionEnd(transition);
     }

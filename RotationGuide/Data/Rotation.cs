@@ -1,27 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace RotationGuide.Data;
 
+[Serializable]
 public class Rotation
 {
-    public string Name;
+    private string id;
+    private uint jobId;
+    private string name;
     public string Patch;
-    public List<IRotationNode> nodes;
+
+    private List<IRotationNode> nodes;
     public bool HasPullIndicator { get; private set; }
-
-    public IRotationNode[] Nodes => nodes.ToArray();
-
-    public Rotation()
+    
+    [JsonInclude]
+    public IRotationNode[] Nodes
     {
-        Reset();
+        get => nodes.ToArray();
+        private set => nodes = new List<IRotationNode>(value);
     }
 
-    public void Reset()
+    public string Id => id;
+    public uint JobId => jobId;
+
+    public string Name
     {
+        get => name;
+        set
+        {
+            name = value;
+            OnRotationChanged?.Invoke(this);
+        }
+    }
+
+    public event Action<Rotation> OnRotationChanged;
+
+    public Rotation(uint jobId)
+    {
+        this.jobId = jobId;
+        id = Guid.NewGuid().ToString();
         Name = "";
         Patch = "";
         nodes = new List<IRotationNode>();
+        HasPullIndicator = false;
     }
 
     public void AddPullIndicator()
@@ -33,6 +57,8 @@ public class Rotation
 
         nodes.Add(new PullIndicatorNode());
         HasPullIndicator = true;
+        
+        OnRotationChanged(this);
     }
 
     public void AddAction(IActionNode actionNode)
@@ -42,7 +68,13 @@ public class Rotation
             throw new ArgumentException("Cant add prepull after pull indicator");
         }
 
+        if (nodes.Count > 0 && nodes.Last() is GCDActionNode && actionNode is GCDActionNode)
+        {
+            nodes.Add(new OGCDActionsNode());
+        }
+
         nodes.Add(actionNode);
+        OnRotationChanged(this);
     }
 
     public void ReplaceActionNode(int index, IActionNode actionNode)
@@ -53,15 +85,35 @@ public class Rotation
         }
 
         nodes[index] = actionNode;
+        OnRotationChanged(this);
+    }
+
+    public void UpdateOgcdNode(int index, int innerIndex, uint id)
+    {
+        var rotationNode = Nodes[index];
+
+        if (rotationNode is OGCDActionsNode actionsNode)
+        {
+            actionsNode.Ids[innerIndex] = id;
+            OnRotationChanged(this);
+        }
+        else
+        {
+            throw new ArgumentException("Trying to update a non ogcd node");
+        }
     }
 
     public void RemoveActionNode(int index)
     {
         nodes.RemoveAt(index);
+        OnRotationChanged(this);
     }
-
 }
 
+[JsonDerivedType(typeof(GCDActionNode), typeDiscriminator: "GCD")]
+[JsonDerivedType(typeof(OGCDActionsNode), typeDiscriminator: "OGCD")]
+[JsonDerivedType(typeof(PrePullActionNode), typeDiscriminator: "PrePull")]
+[JsonDerivedType(typeof(PullIndicatorNode), typeDiscriminator: "PullIndicator")]
 public interface IRotationNode { }
 
 public interface IActionNode : IRotationNode
@@ -80,15 +132,18 @@ public struct GCDActionNode : IActionNode
     }
 }
 
-public struct OGCDActionNode : IActionNode
+public struct OGCDActionsNode : IRotationNode
 {
-    private uint id;
+    private uint[] ids = { uint.MaxValue, uint.MaxValue, uint.MaxValue };
 
-    public uint Id
+    [JsonInclude]
+    public uint[] Ids
     {
-        get => id;
-        set => id = value;
+        get => ids;
+        private set => ids = value;
     }
+
+    public OGCDActionsNode() { }
 }
 
 public struct PrePullActionNode : IActionNode

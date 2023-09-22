@@ -12,6 +12,13 @@ public static class DrawUtils
         return new Vector2(winPosition.X + position.X, winPosition.Y + position.Y);
     }
     
+    public static Vector2 ToScreenSpace(Vector2 position)
+    {
+        var winPosition = ImGui.GetWindowPos();
+
+        return new Vector2(winPosition.X + position.X, winPosition.Y + position.Y);
+    }
+    
     public static void DrawLine(
         ImDrawListPtr drawListPtr, Vector2 startPosition, Vector2 endPosition, Vector4 color, float thickness = 1f)
     {
@@ -52,4 +59,9 @@ public static class DrawUtils
 
         return (min, max);
     }
+
+    // private static void DrawFloatingImageButton(ImDrawListPtr drawListPtr)
+    // {
+    //     drawListPtr.addIma
+    // }
 }

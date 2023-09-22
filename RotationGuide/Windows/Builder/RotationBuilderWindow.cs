@@ -5,11 +5,13 @@ using System.Numerics;
 using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
 using ImGuiNET;
+using RotationGuide.Data;
+using RotationGuide.Services;
 using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationGuide.Windows;
 
-internal enum BuilderMode
+internal enum BuilderScreen
 {
     Menu,
     CreateChooseJob,
@@ -18,43 +20,56 @@ internal enum BuilderMode
 
 public class RotationBuilderWindow : Window, IDisposable
 {
-    private const int transitionTime = 250;
+    private const int transitionTime = 1000;
     private Plugin Plugin;
-    private BuilderMode Mode { get; set; }
-    private Queue<BuilderMode> History { get; } = new();
+    private BuilderScreen Screen { get; set; }
+    private Queue<BuilderScreen> History { get; } = new();
 
-    private Dictionary<BuilderMode, Renderer> ModeToRenderer { get; init; }
+    private Dictionary<BuilderScreen, Renderer> ModeToRenderer { get; init; }
 
-    private (BuilderMode from, BuilderMode to) UITransitionPair { get; set; }
+    private (BuilderScreen from, BuilderScreen to) UITransitionPair { get; set; }
 
     private readonly Stopwatch stopwatch = new();
 
-    public RotationBuilderWindow(Plugin plugin) : base("Rotation Builder",
-                                                       ImGuiWindowFlags.NoScrollbar |
-                                                       ImGuiWindowFlags.NoScrollWithMouse)
+    public RotationBuilderWindow(Plugin plugin) : base("Rotation Builder", ImGuiWindowFlags.HorizontalScrollbar)
     {
-        Size = new Vector2(500, 500);
-        // SizeCondition = ImGuiCond.FirstUseEver;
+        Size = new Vector2(500, 320);
+        SizeCondition = ImGuiCond.FirstUseEver;
 
         Position = new Vector2(1000, 500);
         PositionCondition = ImGuiCond.Appearing;
-
+        
+        this.SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(250, 270),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
+        
         var menu = new MenuRenderer();
         var chooseJobRenderer = new ChooseJobRenderer();
-        var rotationRenderer = new RotationPageRenderer();
+        var rotationPageRenderer = new RotationPageRenderer();
 
-        ModeToRenderer = new Dictionary<BuilderMode, Renderer>
+        ModeToRenderer = new Dictionary<BuilderScreen, Renderer>
         {
-            { BuilderMode.Menu, menu },
-            { BuilderMode.CreateChooseJob, chooseJobRenderer },
-            { BuilderMode.Create, rotationRenderer }
+            { BuilderScreen.Menu, menu },
+            { BuilderScreen.CreateChooseJob, chooseJobRenderer },
+            { BuilderScreen.Create, rotationPageRenderer }
         };
 
-        menu.OnGoToCreateChooseJob += () => GoToMode(BuilderMode.CreateChooseJob);
+        RotationListRenderer.OnEditClick += rotation =>
+        {
+            rotationPageRenderer.Rotation = rotation;
+            GoToMode(BuilderScreen.Create);
+        };
+        
+        menu.OnGoToCreateChooseJob += () => GoToMode(BuilderScreen.CreateChooseJob);
         chooseJobRenderer.OnJobSelected += job =>
         {
-            rotationRenderer.Job = job;
-            GoToMode(BuilderMode.Create);
+            var rotation = new Rotation(job.RowId);
+            rotationPageRenderer.Rotation = rotation;
+            RotationDataService.Save(rotation);
+            
+            GoToMode(BuilderScreen.Create);
         };
     }
 
@@ -64,7 +79,6 @@ public class RotationBuilderWindow : Window, IDisposable
     {
         try
         {
-
             if (History.Count != 0)
             {
                 RenderBackButton();
@@ -80,10 +94,10 @@ public class RotationBuilderWindow : Window, IDisposable
                 if (time >= 1)
                 {
                     stopwatch.Reset();
-                    Mode = UITransitionPair.to;
+                    Screen = UITransitionPair.to;
                 }
             }
-            else if (ModeToRenderer.TryGetValue(Mode, out var renderer))
+            else if (ModeToRenderer.TryGetValue(Screen, out var renderer))
             {
                 renderer.Render();
             }
@@ -94,27 +108,14 @@ public class RotationBuilderWindow : Window, IDisposable
         }
     }
 
-
-    public void RenderMenu()
+    private void GoToMode(BuilderScreen screen)
     {
-        var padding = 50;
-        var buttonSize = new Vector2(500, 100);
-        var windowSize = ImGui.GetWindowSize();
+        History.Enqueue(Screen);
 
-        var createButtonPos = (windowSize / 2) - (buttonSize / 2);
-        ImGui.SetCursorPos(createButtonPos);
-
-        if (ImGui.Button("CREATE", buttonSize))
-        {
-            GoToMode(BuilderMode.CreateChooseJob);
-        }
-    }
-
-    private void GoToMode(BuilderMode mode)
-    {
-        History.Enqueue(Mode);
-
-        StartTransition(Mode, mode);
+        // TODO: maybe one day make trasitions work 
+        // StartTransition(Screen, screen);
+        
+        Screen = screen;
     }
 
     private void Back()
@@ -124,7 +125,8 @@ public class RotationBuilderWindow : Window, IDisposable
             return;
         }
 
-        StartTransition(Mode, History.Dequeue());
+        // StartTransition(Screen, History.Dequeue());
+        Screen = History.Dequeue();
     }
 
     public void RenderBackButton()
@@ -135,7 +137,7 @@ public class RotationBuilderWindow : Window, IDisposable
         }
     }
 
-    private void StartTransition(BuilderMode prev, BuilderMode next)
+    private void StartTransition(BuilderScreen prev, BuilderScreen next)
     {
         UITransitionPair = (from: prev, to: next);
         stopwatch.Reset();

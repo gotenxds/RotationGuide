@@ -1,70 +1,103 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using RotationGuide.Data;
+using RotationGuide.Services;
 using RotationGuide.Utils;
+using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationGuide.Windows;
 
 public class RotationPageRenderer : Renderer
 {
-    public ClassJob Job
+    public Rotation Rotation
     {
-        get => job;
+        get => rotation;
         set
         {
-            rotation.Reset();
-            job = value;
-            actionSearchPopup.Job = value;
+            if (rotation != null)
+            {
+                rotation.OnRotationChanged -= OnRotationChange;
+            }
+            
+            rotation = value;
+            rotation.OnRotationChanged += OnRotationChange;
+            RotationRenderer.Rotation = rotation;
+            ActionSearchPopup.Instance.Job = Job;
         }
     }
 
-    private ActionSearchPopup actionSearchPopup = new();
-    private RotationRenderer rotationRenderer = new();
-    private bool renderActionButtons = false;
-    private ActionType nextActionToCreate;
-    private int actionIndexToReplace = -1;
-    private ClassJob job;
+    public ClassJob Job => Data.Job.GetJob(rotation.JobId);
+
+    private RotationRenderer RotationRenderer { get; init; }
     private Rotation rotation;
+    private bool isEditingName = false;
+    private ToolsChildWindow ToolsChildWindow { get; init; }
 
     public RotationPageRenderer()
     {
-        rotation = new Rotation();
-        rotationRenderer.Rotation = rotation;
+        ToolsChildWindow = new ToolsChildWindow(() => !Rotation.HasPullIndicator);
+        RotationRenderer = new RotationRenderer();
 
-        rotationRenderer.OnActionClick += actionClickEventArgs =>
+        ToolsChildWindow.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
+        ToolsChildWindow.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
+        ToolsChildWindow.OnAddPullBarClicked += () => rotation.AddPullIndicator();
+
+        RotationRenderer.OnActionClick += async actionClickEventArgs =>
         {
-            nextActionToCreate = actionClickEventArgs.Type;
-            actionIndexToReplace = actionClickEventArgs.Index;
-            actionSearchPopup.Open();
+            var action = await ActionSearchPopup.Instance.Open();
+
+            OnActionSelected(action, actionClickEventArgs.Index, actionClickEventArgs.Type);
         };
-        
-        actionSearchPopup.OnActionSelected += a =>
+
+        RotationRenderer.OnOGCDClick += async actionClickEventArgs =>
         {
-            IActionNode actionNode = nextActionToCreate switch
+            var action = await ActionSearchPopup.Instance.Open();
+
+            OnOGCDSelected(action, actionClickEventArgs.Index, actionClickEventArgs.InnerIndex);
+        };
+    }
+
+    private async void OnAddActionClicked(ActionType type)
+    {
+        var action = await ActionSearchPopup.Instance.Open();
+        OnActionSelected(action, -1, type);
+    }
+
+    private void OnRotationChange(Rotation rotation)
+    {
+        RotationDataService.Save(rotation);
+    }
+
+    private void OnActionSelected(Action selectedAction, int actionIndexToReplace, ActionType actionType)
+    {
+        if (actionIndexToReplace != -1)
+        {
+            var action = (IActionNode)rotation.Nodes[actionIndexToReplace];
+            action.Id = selectedAction.RowId;
+
+            rotation.ReplaceActionNode(actionIndexToReplace, action);
+        }
+        else
+        {
+            IActionNode actionNode = actionType switch
             {
                 ActionType.GCD => new GCDActionNode(),
-                ActionType.OGCD => new GCDActionNode(),
                 ActionType.PREPULL => new PrePullActionNode(),
-                _ => new OGCDActionNode()
+                _ => throw new ArgumentException()
             };
-            
-            actionNode.Id = a.RowId;
 
-            if (actionIndexToReplace != -1)
-            {
-                rotation.ReplaceActionNode(actionIndexToReplace, actionNode);
-                actionIndexToReplace = -1;
-            }
-            else
-            {
-                rotation.AddAction(actionNode);
-            }
-        };
+            actionNode.Id = selectedAction.RowId;
+            rotation.AddAction(actionNode);
+        }
+    }
+
+    private void OnOGCDSelected(Action selectedAction, int index, int innerIndex)
+    {
+        rotation.UpdateOgcdNode(index, innerIndex, selectedAction.RowId);
     }
 
     public override void Render(Transition transition = Transition.None, float time = 0)
@@ -77,99 +110,37 @@ public class RotationPageRenderer : Renderer
         ImGui.SetCursorPosY(100 + BaseCursorHeight);
 
         ImGui.BeginGroup();
+        ImGui.Indent(50);
 
         RenderTitle();
 
-        ImGuiExt.IndentV(300);
-        ImGui.Indent(50);
+        ImGuiExt.IndentV(100);
 
         RenderRotation();
 
-        RenderActionButtons();
-
         ImGui.EndGroup();
 
-        actionSearchPopup.Render();
+        ActionSearchPopup.Instance.Render();
 
-        CheckForGeneralClicks();
+        ToolsChildWindow.Render();
     }
 
     private void RenderRotation()
     {
-        rotationRenderer.Render();
-
-        RenderAddButton();
-    }
-
-    private void CheckForGeneralClicks()
-    {
-        if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && !ImGui.IsItemHovered())
+        if (rotation.Nodes.Length == 0)
         {
-            renderActionButtons = false;
-        }
-    }
+            var windowSize = ImGui.GetWindowSize();
+            var windowPos = ImGui.GetWindowPos();
+            var windowCenter = windowPos + (windowSize / 2) - new Vector2(265, 25);
 
-    private void RenderAddButton()
-    {
-        ImGui.PushFont(UiBuilder.IconFont);
-        if (ImGui.Button(FontAwesomeIcon.Plus.ToIconString(), Vector2.One * 64))
+            var imDrawListPtr = ImGui.GetWindowDrawList();
+            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 84, windowCenter, Colors.FadedText, "TIME TO CREATE");
+            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 32, windowCenter + new Vector2(50, 70), Colors.FadedText, "Use one of the tools below to start");
+        }
+        else
         {
-            renderActionButtons = true;
+            RotationRenderer.Render();
         }
-
-        ImGui.PopFont();
-    }
-
-    private void RenderActionButtons()
-    {
-        if (!renderActionButtons)
-        {
-            return;
-        }
-
-        var newActionButtonSize = new Vector2(100, 100);
-        var pullIndicatorButtonSize = new Vector2(200, 100);
-        var newOGCDButtonSize = new Vector2(100, 100);
-        var newPrepullActionButtonSize = new Vector2(100, 100);
-
-        ImGui.SetCursorPosX(
-            ImGuiExt.CalculateCenterXWith(newActionButtonSize.X + pullIndicatorButtonSize.X + newOGCDButtonSize.X));
-
-        ImGui.BeginGroup();
-
-        if (ImGui.Button("Action", newActionButtonSize))
-        {
-            nextActionToCreate = ActionType.GCD;
-            renderActionButtons = false;
-            actionSearchPopup.Open();
-        }
-
-        ImGui.SameLine();
-        if (ImGui.Button("OGCD", newOGCDButtonSize))
-        {
-            nextActionToCreate = ActionType.OGCD;
-            renderActionButtons = false;
-            actionSearchPopup.Open();
-        }
-
-        ImGui.SameLine();
-        if (!rotation.HasPullIndicator)
-        {
-            if (ImGui.Button("Pull Indicator", pullIndicatorButtonSize))
-            {
-                rotation.AddPullIndicator();
-                renderActionButtons = false;
-            }
-            
-            if (ImGui.Button("Prepull Action", pullIndicatorButtonSize))
-            {
-                nextActionToCreate = ActionType.PREPULL;
-                renderActionButtons = false;
-                actionSearchPopup.Open();
-            }
-        }
-
-        ImGui.EndGroup();
     }
 
     private void RenderTitle()
@@ -180,7 +151,34 @@ public class RotationPageRenderer : Renderer
 
         ImGui.Image(jobTextureWrap!.ImGuiHandle, new Vector2(jobTextureWrap.Width, jobTextureWrap.Height));
         ImGui.SameLine();
-        Fonts.WriteWithFont(Fonts.Jupiter23, Job.Name);
+        Fonts.WriteWithFont(Fonts.Jupiter23, $"{Job.Name} -");
+        ImGui.SameLine();
+
+        if (isEditingName)
+        {
+            ImGui.SetKeyboardFocusHere();
+            ImGuiExt.IndentV(15);
+            ImGui.SetNextItemWidth(300);
+            var nameRef = rotation.Name;
+            if (ImGui.InputTextWithHint("##RotationName", "Rotation name", ref nameRef, 30))
+            {
+                rotation.Name = nameRef;
+            }
+
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && !ImGui.IsItemHovered())
+            {
+                isEditingName = false;
+            }
+        }
+        else
+        {
+            Fonts.WriteWithFont(Fonts.Jupiter23, rotation.Name != "" ? rotation.Name : "Rotation name");
+
+            if (ImGui.IsItemClicked())
+            {
+                isEditingName = true;
+            }
+        }
 
         ImGui.EndGroup();
     }

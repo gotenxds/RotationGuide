@@ -7,6 +7,7 @@ using Dalamud.Interface.GameFonts;
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using RotationGuide.Data;
 using RotationGuide.Utils;
 using Action = System.Action;
 
@@ -15,19 +16,12 @@ namespace RotationGuide.Windows;
 
 public class ChooseJobRenderer : Renderer
 {
-    private static HashSet<string> ViableJobs = new()
-    {
-        "PLD", "WAR", "DRK", "GNB",
-        "WHM", "SCH", "AST", "SGE",
-        "MNK", "DRG", "NIN", "SAM", "RPR",
-        "BRD", "MCH", "DNC",
-        "BLM", "SMN", "RDM"
-    };
+
     
     private List<ClassJob> tanks = new();
     private List<ClassJob> healers = new();
-    private List<ClassJob> RDps = new();
-    private List<ClassJob> mDps = new();
+    private List<ClassJob> meleeDps = new();
+    private List<ClassJob> rangeDps = new();
 
     public event Action<ClassJob> OnJobSelected;
 
@@ -35,7 +29,7 @@ public class ChooseJobRenderer : Renderer
     {
         foreach (var classJob in Plugin.DataManager.GetExcelSheet<ClassJob>())
         {
-            if (ViableJobs.Contains(classJob.Abbreviation))
+            if (Job.ViableJobAbbreviation.Contains(classJob.Abbreviation))
             {
                 switch (classJob.Role)
                 {
@@ -43,10 +37,10 @@ public class ChooseJobRenderer : Renderer
                         tanks.Add(classJob);
                         break;
                     case 2:
-                        RDps.Add(classJob);
+                        meleeDps.Add(classJob);
                         break;
                     case 3:
-                        mDps.Add(classJob);
+                        rangeDps.Add(classJob);
                         break;
                     case 4:
                         healers.Add(classJob);
@@ -61,38 +55,51 @@ public class ChooseJobRenderer : Renderer
         StyleTransitionBegin(transition, time);
 
         var windowSize = ImGui.GetWindowSize();
-        ImGui.SetCursorPosX((windowSize.X / 2) - 150);
-        ImGui.SetCursorPosY((windowSize.Y / 2) - 200 + BaseCursorHeight);
-
+        ImGui.SetCursorPosX((windowSize.X / 2) - 319);
+        
         ImGui.BeginGroup();
         
         Fonts.WriteWithFont(Fonts.Jupiter23, "Choose a Job");
 
         RenderGroup(tanks);
         RenderGroup(healers);
-        RenderGroup(RDps);
-        RenderGroup(mDps);
+        RenderGroup(meleeDps);
+        RenderGroup(rangeDps);
         
         ImGui.EndGroup();
 
         StyleTransitionEnd(transition);
     }
 
-    private void RenderGroup(IEnumerable<ClassJob> classJobs)
+    private void RenderGroup(IList<ClassJob> classJobs)
     {
         ImGui.BeginGroup();
         ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, 500);
-        foreach (var classJob in classJobs)
+        for (var index = 0; index < classJobs.Count; index++)
         {
+            var classJob = classJobs.ToList()[index];
             var dalamudTextureWrap = Plugin.TextureProvider.GetIcon(classJob.RowId + 100 + 62000u);
+            
+            if (index == classJobs.Count - 1 && classJobs.Count % 2 != 0)
+            {
+                ImGui.Indent((ImGui.GetItemRectSize().X / 2) + 4);
+            }
+            
             if (ImGui.ImageButton(dalamudTextureWrap.ImGuiHandle,
                                   new Vector2(dalamudTextureWrap.Width, dalamudTextureWrap.Height)))
             {
                 OnJobSelected.Invoke(classJob);
             }
-        }
 
+            if ((index + 1) % 2 != 0)
+            {
+                ImGui.SameLine(); 
+            }
+        }
         ImGui.EndGroup();
-        ImGui.SameLine();
+        
+        // ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), Colors.FadedText);
+        
+        ImGui.SetCursorScreenPos(ImGui.GetItemRectMax() - new Vector2(-10, ImGui.GetItemRectSize().Y));
     }
 }

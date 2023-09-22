@@ -1,14 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
+using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using RotationGuide.Utils;
 
 namespace RotationGuide.Windows;
 
 public class ActionSearchPopup
 {
+    private const int WindowPadding = 10;
     private const int RowHeight = 80;
     private const int ActionsMargin = 50;
     private const int ActionMarginTop = 8;
@@ -20,8 +24,13 @@ public class ActionSearchPopup
 
     private List<Action> actions;
     private ClassJob job;
+    private TaskCompletionSource<Action> selectedActionTask;
+    private bool isOpen = false;
+    
+    public static ActionSearchPopup Instance { get; private set; } = new();
 
-    public event System.Action<Action> OnActionSelected;
+    private ActionSearchPopup() { }
+
     public ClassJob Job
     {
         get => job;
@@ -32,22 +41,35 @@ public class ActionSearchPopup
         }
     }
 
-    public void Open()
+    public Task<Action> Open()
     {
         ImGui.OpenPopup(ActionSearchDialogId);
+        isOpen = true;
         focusOnSearch = true;
+
+        selectedActionTask = new TaskCompletionSource<Action>();
+
+        return selectedActionTask.Task;
     }
 
     public void Render()
     {
         var isOpen = true;
-
+        
+        ImGui.SetNextWindowPos(ImGui.GetWindowPos());
+        ImGui.SetNextWindowSizeConstraints(new Vector2(ImGui.GetWindowSize().X, 200), new Vector2(ImGui.GetWindowSize().X, 500));
+        
         if (ImGui.BeginPopupModal(ActionSearchDialogId, ref isOpen, ImGuiWindowFlags.NoTitleBar))
         {
             RenderSearch();
 
             RenderActions();
 
+            if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) && !ImGui.IsAnyItemHovered() && !ImGui.IsWindowAppearing())
+            {
+                ImGui.CloseCurrentPopup();
+            }
+            
             ImGui.EndPopup();
         }
     }
@@ -102,7 +124,7 @@ public class ActionSearchPopup
         if (ImGui.IsItemClicked())
         {
             ImGui.CloseCurrentPopup();
-            OnActionSelected.Invoke(action);
+            selectedActionTask.SetResult(action);
         }
 
         ImGui.SetCursorPosY((ActionMarginTop * 2) + currentRowYPosition);

@@ -27,9 +27,9 @@ namespace RotationGuide
         public static UiBuilder UiBuilder { get; private set; }
         public static ITextureProvider TextureProvider { get; private set; }
 
-        public static TextureWrap PullBarImage;
+        public static DalamudPluginInterface PluginInterface { get; set; }
 
-        private DalamudPluginInterface PluginInterface { get; init; }
+        public static TextureWrap PullBarImage;
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         private Dictionary<string, (Window window, string helpMessage)> Commands { get; init; }
@@ -40,15 +40,15 @@ namespace RotationGuide
             [RequiredVersion("1.0")] ITextureProvider textureProvider,
             [RequiredVersion("1.0")] DataManager dataManager)
         {
-            this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
+            PluginInterface = pluginInterface;
             DataManager = dataManager;
             UiBuilder = pluginInterface.UiBuilder;
             TextureProvider = textureProvider;
 
-            this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            this.Configuration.Initialize(this.PluginInterface);
-            
+            this.Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+            this.Configuration.Initialize(PluginInterface);
+
             Fonts.Init(UiBuilder);
 
             Commands = new Dictionary<string, (Window window, string helpMessage)>()
@@ -63,12 +63,12 @@ namespace RotationGuide
                 WindowSystem.AddWindow(window);
                 this.CommandManager.AddHandler(command, new CommandInfo(OnCommand) { HelpMessage = helpMessage });
             }
-            
-            var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "pullBar.png");
-            PullBarImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
 
-            this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+            var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "pullBar.png");
+            PullBarImage = PluginInterface.UiBuilder.LoadImage(imagePath);
+
+            PluginInterface.UiBuilder.Draw += DrawUI;
+            PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
         public void Dispose()
@@ -88,7 +88,6 @@ namespace RotationGuide
 
         private void OnCommand(string command, string args)
         {
-            PluginLog.Debug(command);
             if (Commands.TryGetValue(command, out var commandData))
             {
                 commandData.window.IsOpen = true;

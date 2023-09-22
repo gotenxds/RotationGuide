@@ -12,8 +12,8 @@ public static class Fonts
 
     public static void Init(UiBuilder uiBuilder)
     {
-        Axis32 = uiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Axis36));
         Axis18 = uiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Axis18));
+        Axis32 = uiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Axis36));
         Jupiter23 = uiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamilyAndSize.Jupiter23));
     }
 
