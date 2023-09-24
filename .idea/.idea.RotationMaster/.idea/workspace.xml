@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: builder done for now (really now)">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/indexLayout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide.sln.DotSettings" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Configuration.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Data/Job.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Data/Rotation.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Plugin.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/RotationGuide.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/RotationGuide.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Services/RotationDataService.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/AnimationEasings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/ArrayUtils.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Colors.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Compression.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/DrawUtils.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/FileUtils.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Fonts.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/ImGuiExt.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/StringUtils.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/ActionSearchDialog.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/BuilderFooter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/ChooseJobRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/CreateRotationDialog.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/MenuRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationBuilderRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationListRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationRenderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/RotationBuilderWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Components/WindowFooter.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/ConfigWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/MainWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Renderer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/RotationWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Transition.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationGuide/packages.lock.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34d4b6d75dae43b080eeda4e11abf4ee3d010/65/ca13019f/LazyRow`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/14/28a87b39/GameFontHandle.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/90/d90c6386/UiBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/9b/1e12974b/GameFontFamilyAndSize.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/a2/8c9f3340/InterfaceManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/a4/8c42981b/FontAwesomeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/c1/3f80ea46/DalamudPluginInterface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/db/818d4230/Window.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/dd/a9c244a4/Easing.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/e1/b52f4aa7/ImGuiHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/f9/2e085509/WindowSystem.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/04/bc0d08f7/ImGuiNative.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/21/a59b83e2/ImDrawListPtr.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/65/46294c93/ImDrawFlags.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/67/82804682/ImGuiCol.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/b1/4a9a793c/ImGuiMouseButton.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/d8/0ca9632d/ImGuiStylePtr.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/e2/35148e96/ImGuiWindowFlags.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/ef/d7543ad8/ImGui.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/333fbcc1d01c7ebc2254876783473d65b0347203eacc6274532761d4a581b/ClassJob.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4eae6449caa21e90c2ff2d63846343457a0e4192fb25892da80d78feb4774f/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/76a7b4387866adc31f9e317277cff4e5a723e96e76b52dd8afe066edf1abf9c3/Array.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7a1f8598a39ec31d1e245f9818d1452c609af7baba52ce4e12d8bd9d17e92/ClassJobCategory.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/91de49164bbacc921427e4e82ae4273bff1884d0349c1586ca79f57fe44c4844/MemoryStream.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/de2e9137a5d316c5550a733abec1cbf768045fdd0abe37b612134348a55e572/Action.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ed32396d5ecfa57194d77f5902ae92b5a2a34b68ccbc680b67f59377037e8e2/CacheItemPolicy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f3981d658666ec9cc1e6958fe22f8614bfe02ccb6625b056c3ece3729c9262/JsonConvert.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2VVNNrZAPG8EiPayQX2GZea7Fyo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;SolutionBuilderGeneralOptionsPage&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="" />
+      <created>1694917252050</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694917252050</updated>
+      <workItem from="1694917256789" duration="240903000" />
+      <workItem from="1695527297490" duration="74000" />
+    </task>
+    <task id="LOCAL-00001" summary="init">
+      <created>1695089127416</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1695089127416</updated>
+    </task>
+    <task id="LOCAL-00002" summary="init">
+      <created>1695089143005</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1695089143005</updated>
+    </task>
+    <task id="LOCAL-00003" summary="feat: builder done for now">
+      <created>1695417217781</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1695417217781</updated>
+    </task>
+    <task id="LOCAL-00004" summary="feat: builder done for now (really now)">
+      <created>1695527127121</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1695527127121</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <MESSAGE value="feat: builder done for now" />
+    <MESSAGE value="feat: builder done for now (really now)" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: builder done for now (really now)" />
+  </component>
+</project>
