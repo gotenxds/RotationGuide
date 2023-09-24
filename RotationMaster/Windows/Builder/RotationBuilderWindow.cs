@@ -13,26 +13,19 @@ namespace RotationMaster.Windows;
 
 public enum BuilderScreen
 {
-    Menu,
-    CreateChooseJob,
-    Create,
+    Menu = 1,
+    CreateChooseJob = 2,
+    Create = 3,
 }
 
 public class RotationBuilderWindow : Window, IDisposable
 {
-    private const int transitionTime = 1000;
-    private static Queue<BuilderScreen> History { get; } = new();
-
-    private static BuilderScreen Screen { get; set; }
+    public static Router<BuilderScreen> Router = new(BuilderScreen.Menu);
     
     private Plugin Plugin;
 
     private Dictionary<BuilderScreen, Renderer> ModeToRenderer { get; init; }
-
-    private (BuilderScreen from, BuilderScreen to) UITransitionPair { get; set; }
-
-    private readonly Stopwatch stopwatch = new();
-
+    
     public RotationBuilderWindow(Plugin plugin) : base("Rotation Builder", ImGuiWindowFlags.HorizontalScrollbar)
     {
         Size = new Vector2(500, 320);
@@ -61,17 +54,17 @@ public class RotationBuilderWindow : Window, IDisposable
         RotationListRenderer.OnEditClick += rotation =>
         {
             rotationPageRenderer.Rotation = rotation;
-            GoTo(BuilderScreen.Create);
+            Router.GoTo(BuilderScreen.Create);
         };
         
-        menu.OnGoToCreateChooseJob += () => GoTo(BuilderScreen.CreateChooseJob);
+        menu.OnGoToCreateChooseJob += () => Router.GoTo(BuilderScreen.CreateChooseJob);
         chooseJobRenderer.OnJobSelected += job =>
         {
             var rotation = new Rotation(job.RowId);
             rotationPageRenderer.Rotation = rotation;
             RotationDataService.Save(rotation);
             
-            GoTo(BuilderScreen.Create);
+            Router.GoTo(BuilderScreen.Create);
         };
     }
 
@@ -81,25 +74,11 @@ public class RotationBuilderWindow : Window, IDisposable
     {
         try
         {
-            if (History.Count != 0)
+            if (Router.HasHistory)
             {
                 RenderBackButton();
             }
-
-            if (stopwatch.IsRunning)
-            {
-                var time = (float)stopwatch.ElapsedMilliseconds / transitionTime;
-
-                ModeToRenderer[UITransitionPair.from].Render(Transition.Out, time);
-                ModeToRenderer[UITransitionPair.to].Render(Transition.In, time);
-
-                if (time >= 1)
-                {
-                    stopwatch.Reset();
-                    Screen = UITransitionPair.to;
-                }
-            }
-            else if (ModeToRenderer.TryGetValue(Screen, out var renderer))
+            if (ModeToRenderer.TryGetValue(Router.CurrentScreen, out var renderer))
             {
                 renderer.Render();
             }
@@ -109,40 +88,13 @@ public class RotationBuilderWindow : Window, IDisposable
             PluginLog.Error(e, "error");
         }
     }
-
-    public static void GoTo(BuilderScreen screen)
-    {
-        History.Enqueue(Screen);
-
-        // TODO: maybe one day make trasitions work 
-        // StartTransition(Screen, screen);
-        
-        Screen = screen;
-    }
-
-    private static void Back()
-    {
-        if (History.Count == 0)
-        {
-            return;
-        }
-
-        // StartTransition(Screen, History.Dequeue());
-        Screen = History.Dequeue();
-    }
+    
 
     public void RenderBackButton()
     {
         if (ImGui.ArrowButton("BACK", ImGuiDir.Left))
         {
-            Back();
+            Router.GoBack();
         }
-    }
-
-    private void StartTransition(BuilderScreen prev, BuilderScreen next)
-    {
-        UITransitionPair = (from: prev, to: next);
-        stopwatch.Reset();
-        stopwatch.Start();
     }
 }

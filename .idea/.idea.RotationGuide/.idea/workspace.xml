@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="chore: changed name of project">
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="fix: fixed rendering of action search when clicking from inside the rotation renderer.">
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Components/Router.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationListRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationListRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/RotationBuilderWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/RotationBuilderWindow.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +69,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="1342000" />
+      <workItem from="1695527644520" duration="2801000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -112,7 +113,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695528498073</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fix: fixed rendering of action search when clicking from inside the rotation renderer.">
+      <created>1695529024469</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1695529024469</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -136,6 +144,7 @@
     <MESSAGE value="feat: builder done for now" />
     <MESSAGE value="feat: builder done for now (really now)" />
     <MESSAGE value="chore: changed name of project" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore: changed name of project" />
+    <MESSAGE value="fix: fixed rendering of action search when clicking from inside the rotation renderer." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed rendering of action search when clicking from inside the rotation renderer." />
   </component>
 </project>

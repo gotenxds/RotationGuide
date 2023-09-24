@@ -204,7 +204,7 @@ public class RotationListRenderer : Renderer
     {
         if (ImGui.Button("Create"))
         {
-            RotationBuilderWindow.GoTo(BuilderScreen.CreateChooseJob);
+            RotationBuilderWindow.Router.GoTo(BuilderScreen.CreateChooseJob);
         }
         ImGui.SameLine();
         if (ImGui.Button("Import"))
