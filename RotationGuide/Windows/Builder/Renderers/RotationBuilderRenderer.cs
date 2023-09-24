@@ -22,11 +22,11 @@ public class RotationPageRenderer : Renderer
             {
                 rotation.OnRotationChanged -= OnRotationChange;
             }
-            
+
             rotation = value;
             rotation.OnRotationChanged += OnRotationChange;
             RotationRenderer.Rotation = rotation;
-            ActionSearchPopup.Instance.Job = Job;
+            ActionSearchDialog.Instance.Job = Job;
         }
     }
 
@@ -35,27 +35,27 @@ public class RotationPageRenderer : Renderer
     private RotationRenderer RotationRenderer { get; init; }
     private Rotation rotation;
     private bool isEditingName = false;
-    private ToolsChildWindow ToolsChildWindow { get; init; }
+    private BuilderFooter BuilderFooter { get; init; }
 
     public RotationPageRenderer()
     {
-        ToolsChildWindow = new ToolsChildWindow(() => !Rotation.HasPullIndicator);
+        BuilderFooter = new BuilderFooter(() => !Rotation.HasPullIndicator);
         RotationRenderer = new RotationRenderer();
 
-        ToolsChildWindow.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
-        ToolsChildWindow.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
-        ToolsChildWindow.OnAddPullBarClicked += () => rotation.AddPullIndicator();
+        BuilderFooter.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
+        BuilderFooter.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
+        BuilderFooter.OnAddPullBarClicked += () => rotation.AddPullIndicator();
 
         RotationRenderer.OnActionClick += async actionClickEventArgs =>
         {
-            var action = await ActionSearchPopup.Instance.Open();
+            var action = await ActionSearchDialog.Instance.Open();
 
             OnActionSelected(action, actionClickEventArgs.Index, actionClickEventArgs.Type);
         };
 
         RotationRenderer.OnOGCDClick += async actionClickEventArgs =>
         {
-            var action = await ActionSearchPopup.Instance.Open();
+            var action = await ActionSearchDialog.Instance.Open();
 
             OnOGCDSelected(action, actionClickEventArgs.Index, actionClickEventArgs.InnerIndex);
         };
@@ -63,7 +63,7 @@ public class RotationPageRenderer : Renderer
 
     private async void OnAddActionClicked(ActionType type)
     {
-        var action = await ActionSearchPopup.Instance.Open();
+        var action = await ActionSearchDialog.Instance.Open();
         OnActionSelected(action, -1, type);
     }
 
@@ -120,9 +120,7 @@ public class RotationPageRenderer : Renderer
 
         ImGui.EndGroup();
 
-        ActionSearchPopup.Instance.Render();
-
-        ToolsChildWindow.Render();
+        BuilderFooter.Render();
     }
 
     private void RenderRotation()
@@ -135,7 +133,8 @@ public class RotationPageRenderer : Renderer
 
             var imDrawListPtr = ImGui.GetWindowDrawList();
             imDrawListPtr.AddText(Fonts.Axis32.ImFont, 84, windowCenter, Colors.FadedText, "TIME TO CREATE");
-            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 32, windowCenter + new Vector2(50, 70), Colors.FadedText, "Use one of the tools below to start");
+            imDrawListPtr.AddText(Fonts.Axis32.ImFont, 32, windowCenter + new Vector2(50, 70), Colors.FadedText,
+                                  "Use one of the tools below to start");
         }
         else
         {
@@ -146,9 +145,9 @@ public class RotationPageRenderer : Renderer
     private void RenderTitle()
     {
         var jobTextureWrap = Plugin.TextureProvider.GetIcon(Job.RowId + 100 + 62000u);
-
+        
         ImGui.BeginGroup();
-
+        
         ImGui.Image(jobTextureWrap!.ImGuiHandle, new Vector2(jobTextureWrap.Width, jobTextureWrap.Height));
         ImGui.SameLine();
         Fonts.WriteWithFont(Fonts.Jupiter23, $"{Job.Name} -");

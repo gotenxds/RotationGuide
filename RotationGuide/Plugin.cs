@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Dalamud.Data;
 using Dalamud.Game.Command;
+using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.Windowing;
@@ -23,26 +24,28 @@ namespace RotationGuide
 
         public readonly WindowSystem WindowSystem = new("RotationGuide");
 
-        public static DataManager DataManager { get; private set; }
+        public static IDataManager DataManager { get; private set; }
         public static UiBuilder UiBuilder { get; private set; }
         public static ITextureProvider TextureProvider { get; private set; }
-
-        public static DalamudPluginInterface PluginInterface { get; set; }
+        public static DalamudPluginInterface PluginInterface { get; private set; }
+        public static ChatGui ChatGui { get; private set; }
 
         public static TextureWrap PullBarImage;
-        private CommandManager CommandManager { get; init; }
+        private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         private Dictionary<string, (Window window, string helpMessage)> Commands { get; init; }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] CommandManager commandManager,
+            [RequiredVersion("1.0")] ICommandManager commandManager,
+            [RequiredVersion("1.0")] ChatGui chatGui,
             [RequiredVersion("1.0")] ITextureProvider textureProvider,
-            [RequiredVersion("1.0")] DataManager dataManager)
+            [RequiredVersion("1.0")] IDataManager dataManager)
         {
             this.CommandManager = commandManager;
             PluginInterface = pluginInterface;
             DataManager = dataManager;
+            ChatGui = chatGui;
             UiBuilder = pluginInterface.UiBuilder;
             TextureProvider = textureProvider;
 

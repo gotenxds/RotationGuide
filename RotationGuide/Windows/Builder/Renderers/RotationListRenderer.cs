@@ -21,12 +21,18 @@ public class RotationListRenderer : Renderer
     private const int JobColumnWidth = 45;
     private const int JobImageSize = 32;
     private const int ActionButtonSize = 40;
-    private const int ActionColumnSize = ActionButtonSize * 2 + 20;
+    private const int ActionColumnSize = ActionButtonSize * 3 + 20;
     private const string AreYouSurePopupId = "RotationList_AreYouSurePopup";
 
     private Rotation? rotationToDelete;
 
     private int currentlyEditedRotationNameIndex = -1;
+    private WindowFooter footer;
+
+    public RotationListRenderer()
+    {
+        footer = new WindowFooter("Tools", RenderFooterActions);
+    }
 
     public static event Action<Rotation> OnEditClick;
 
@@ -34,7 +40,8 @@ public class RotationListRenderer : Renderer
     {
         var columns = Enum.GetValues<RotationTableColumn>();
 
-        if (ImGui.BeginTable("rotations", columns.Length))
+        var contentRegionAvail = ImGui.GetContentRegionAvail() - footer.Size with { X = 0 };
+        if (ImGui.BeginTable("rotations", columns.Length, ImGuiTableFlags.ScrollY, contentRegionAvail))
         {
             ImGui.TableSetupColumn("Job", ImGuiTableColumnFlags.WidthFixed, JobColumnWidth);
             ImGui.TableSetupColumn("Name");
@@ -54,6 +61,7 @@ public class RotationListRenderer : Renderer
         }
 
         RenderAreYouSurePopup();
+        footer.Render();
     }
 
     private void RenderAreYouSurePopup()
@@ -140,6 +148,16 @@ public class RotationListRenderer : Renderer
         }
 
         ImGui.PopID();
+        
+        ImGui.SameLine();
+        ImGui.PushID($"{rotation.Id}_export");
+        if (ImGui.Button(FontAwesomeIcon.FileExport.ToIconString(), Vector2.One * ActionButtonSize))
+        {
+            ImGui.SetClipboardText(RotationDataService.Export(rotation));
+            Plugin.ChatGui.Print("Rotation exported into clipboard");
+        }
+
+        ImGui.PopID();
         ImGui.PopFont();
         ImGui.Unindent(5);
     }
@@ -179,6 +197,19 @@ public class RotationListRenderer : Renderer
                 currentlyEditedRotationNameIndex = -1;
                 RotationDataService.Save(rotation);
             }
+        }
+    }
+
+    private void RenderFooterActions()
+    {
+        if (ImGui.Button("Create"))
+        {
+            RotationBuilderWindow.GoTo(BuilderScreen.CreateChooseJob);
+        }
+        ImGui.SameLine();
+        if (ImGui.Button("Import"))
+        {
+            RotationDataService.Import(ImGui.GetClipboardText());
         }
     }
 }

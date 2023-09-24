@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Dalamud.Logging;
 using RotationGuide.Data;
 using RotationGuide.Utils;
@@ -20,7 +25,7 @@ public class RotationDataService
         {
             LoadOrCreate();
         }
-        
+
         return rotations;
     }
 
@@ -36,14 +41,14 @@ public class RotationDataService
         {
             rotations[findIndex] = rotation;
         }
-        
+
         FileUtils.Save(RotationsFileName, rotations);
     }
-    
+
     public static void Delete(Rotation rotation)
     {
         rotations = rotations.Remove(rotation);
-        
+
         FileUtils.Save(RotationsFileName, rotations);
     }
 
@@ -54,7 +59,7 @@ public class RotationDataService
         {
             PluginLog.Debug("Does not exist, creating");
             rotations = Array.Empty<Rotation>();
-            
+
             FileUtils.Save(RotationsFileName, rotations);
         }
         else
@@ -66,5 +71,22 @@ public class RotationDataService
                 PluginLog.Debug($"Loaded, count: {rotations.Length}");
             }
         }
+    }
+
+    public static string Export(Rotation rotation)
+    {
+        var jsonString = JsonSerializer.Serialize(rotation);
+
+
+        return Compression.Compress(jsonString);
+    }
+
+    public static void Import(string importString)
+    {
+        var json = Compression.Decompress(importString);
+
+        var deserializeRotation = JsonSerializer.Deserialize<Rotation>(json);
+
+        Save(deserializeRotation);
     }
 }

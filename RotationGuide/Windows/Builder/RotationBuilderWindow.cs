@@ -11,7 +11,7 @@ using LuminaAction = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationGuide.Windows;
 
-internal enum BuilderScreen
+public enum BuilderScreen
 {
     Menu,
     CreateChooseJob,
@@ -21,9 +21,11 @@ internal enum BuilderScreen
 public class RotationBuilderWindow : Window, IDisposable
 {
     private const int transitionTime = 1000;
+    private static Queue<BuilderScreen> History { get; } = new();
+
+    private static BuilderScreen Screen { get; set; }
+    
     private Plugin Plugin;
-    private BuilderScreen Screen { get; set; }
-    private Queue<BuilderScreen> History { get; } = new();
 
     private Dictionary<BuilderScreen, Renderer> ModeToRenderer { get; init; }
 
@@ -59,17 +61,17 @@ public class RotationBuilderWindow : Window, IDisposable
         RotationListRenderer.OnEditClick += rotation =>
         {
             rotationPageRenderer.Rotation = rotation;
-            GoToMode(BuilderScreen.Create);
+            GoTo(BuilderScreen.Create);
         };
         
-        menu.OnGoToCreateChooseJob += () => GoToMode(BuilderScreen.CreateChooseJob);
+        menu.OnGoToCreateChooseJob += () => GoTo(BuilderScreen.CreateChooseJob);
         chooseJobRenderer.OnJobSelected += job =>
         {
             var rotation = new Rotation(job.RowId);
             rotationPageRenderer.Rotation = rotation;
             RotationDataService.Save(rotation);
             
-            GoToMode(BuilderScreen.Create);
+            GoTo(BuilderScreen.Create);
         };
     }
 
@@ -108,7 +110,7 @@ public class RotationBuilderWindow : Window, IDisposable
         }
     }
 
-    private void GoToMode(BuilderScreen screen)
+    public static void GoTo(BuilderScreen screen)
     {
         History.Enqueue(Screen);
 
@@ -118,7 +120,7 @@ public class RotationBuilderWindow : Window, IDisposable
         Screen = screen;
     }
 
-    private void Back()
+    private static void Back()
     {
         if (History.Count == 0)
         {

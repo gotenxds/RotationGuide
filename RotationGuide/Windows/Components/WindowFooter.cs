@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
-using RotationGuide.Utils;
 
 namespace RotationGuide.Windows;
 
-public class ToolsChildWindow
+public class WindowFooter
 {
-    public event Action OnAddPrePullActionClicked;
-    public event Action OnAddActionClicked;
-    public event Action OnAddPullBarClicked;
-
-    private Func<bool> enablePullActions;
-
-    public ToolsChildWindow(Func<bool> enablePullActions)
+    private Action childrenRenderer;
+    private string title;
+    public Vector2 Size { get; private set; }
+    
+    public WindowFooter(string title, Action childrenRenderer)
     {
-        this.enablePullActions = enablePullActions;
+        this.title = title;
+        this.childrenRenderer = childrenRenderer;
+        Size = Vector2.One;
     }
 
     public void Render()
@@ -24,18 +23,17 @@ public class ToolsChildWindow
 
         RenderTitle();
 
-        RenderButtons();
+        childrenRenderer.Invoke();
         
-        ActionSearchPopup.Instance.Render();
         End();
     }
 
-    private static void RenderTitle()
+    private void RenderTitle()
     {
         var drawList = ImGui.GetWindowDrawList();
 
         ImGui.Indent(50);
-        ImGui.Text("Tools");
+        ImGui.Text(title);
 
         var titleRectMax = ImGui.GetItemRectMax();
         var titleRectMin = ImGui.GetItemRectMin();
@@ -55,44 +53,18 @@ public class ToolsChildWindow
         ImGui.Unindent();
     }
 
-    private void RenderButtons()
-    {
-        if (!enablePullActions())
-        {
-            ImGui.BeginDisabled();
-        }
-        if (ImGui.Button("PrePull Action"))
-        {
-            OnAddPrePullActionClicked.Invoke();
-        }
-        ImGui.SameLine();
-        if (ImGui.Button("Pull Bar"))
-        {
-            OnAddPullBarClicked.Invoke();
-        }
-        if (!enablePullActions())
-        {
-            ImGui.EndDisabled();
-        }
-        ImGui.SameLine();
-        if (ImGui.Button("Action"))
-        {
-            OnAddActionClicked.Invoke();
-        }
-    }
-
-    private static void Begin()
+    private void Begin()
     {
         ImGui.SetCursorPosX(10);
         var parentPos = ImGui.GetCursorScreenPos();
         var parentSize = ImGui.GetContentRegionAvail();
 
-        var childSize = parentSize with { X = parentSize.X  -10, Y = 100 };
-        var childPos = parentPos with { X = parentPos.X + ImGui.GetScrollX(), Y = parentPos.Y + parentSize.Y - childSize.Y };
-
+        Size = parentSize with { X = parentSize.X  -10, Y = 100 };
+        var childPos = parentPos with { X = parentPos.X + ImGui.GetScrollX(), Y = parentPos.Y + parentSize.Y - Size.Y };
+        
+        
         ImGui.SetNextWindowPos(childPos);
-
-        ImGui.BeginChild("BuilderTools", childSize);
+        ImGui.BeginChild("BuilderTools", Size);
     }
     
     private static void End()

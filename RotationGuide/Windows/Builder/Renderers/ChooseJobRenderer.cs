@@ -16,12 +16,11 @@ namespace RotationGuide.Windows;
 
 public class ChooseJobRenderer : Renderer
 {
-
-    
     private List<ClassJob> tanks = new();
     private List<ClassJob> healers = new();
     private List<ClassJob> meleeDps = new();
-    private List<ClassJob> rangeDps = new();
+    private List<ClassJob> physicalRangeDps = new();
+    private List<ClassJob> magicalRangeDps = new();
 
     public event Action<ClassJob> OnJobSelected;
 
@@ -40,7 +39,15 @@ public class ChooseJobRenderer : Renderer
                         meleeDps.Add(classJob);
                         break;
                     case 3:
-                        rangeDps.Add(classJob);
+                        if (classJob.ClassJobCategory.Value!.Name.ToString().Contains("War"))
+                        {
+                            physicalRangeDps.Add(classJob);
+                        }
+                        else
+                        {
+                            magicalRangeDps.Add(classJob);
+                        }
+
                         break;
                     case 4:
                         healers.Add(classJob);
@@ -55,51 +62,77 @@ public class ChooseJobRenderer : Renderer
         StyleTransitionBegin(transition, time);
 
         var windowSize = ImGui.GetWindowSize();
-        ImGui.SetCursorPosX((windowSize.X / 2) - 319);
-        
+        ImGui.Indent(100);
+
         ImGui.BeginGroup();
-        
+
         Fonts.WriteWithFont(Fonts.Jupiter23, "Choose a Job");
 
+        ImGuiExt.IndentV(50);
         RenderGroup(tanks);
         RenderGroup(healers);
         RenderGroup(meleeDps);
-        RenderGroup(rangeDps);
-        
+        RenderGroup(magicalRangeDps, true);
+        RenderGroup(physicalRangeDps, true);
+
         ImGui.EndGroup();
 
         StyleTransitionEnd(transition);
     }
 
-    private void RenderGroup(IList<ClassJob> classJobs)
+    private void RenderGroup(IList<ClassJob> classJobs, bool canWrap = false)
     {
-        ImGui.BeginGroup();
-        ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, 500);
-        for (var index = 0; index < classJobs.Count; index++)
+        if (canWrap && ImGuiExt.IsOverflowing(new Vector2(300, 0)))
         {
-            var classJob = classJobs.ToList()[index];
-            var dalamudTextureWrap = Plugin.TextureProvider.GetIcon(classJob.RowId + 100 + 62000u);
+            ImGui.NewLine();
+        }
+        
+        var imDrawListPtr = ImGui.GetWindowDrawList();
+        ImGui.BeginGroup();
+        foreach (var classJob in classJobs)
+        {
+            var dalamudTextureWrap = classJob.GetIcon();
+
+            ImGui.BeginGroup();
+            var cursorPos = ImGui.GetCursorPosY();
+            ImGui.Dummy(new Vector2(260, 64));
+            var dummyMinPlusPadding = ImGui.GetItemRectMin() - new Vector2(9, 0);
+            var dummyMaxPlusPadding = ImGui.GetItemRectMax() + new Vector2(19, 0);
             
-            if (index == classJobs.Count - 1 && classJobs.Count % 2 != 0)
+            if (ImGui.IsItemHovered())
             {
-                ImGui.Indent((ImGui.GetItemRectSize().X / 2) + 4);
+                imDrawListPtr.AddRectFilled(dummyMinPlusPadding, dummyMaxPlusPadding, ImGui.GetColorU32(ImGuiCol.ButtonHovered));
             }
-            
-            if (ImGui.ImageButton(dalamudTextureWrap.ImGuiHandle,
-                                  new Vector2(dalamudTextureWrap.Width, dalamudTextureWrap.Height)))
+
+            if (ImGui.IsItemClicked())
             {
                 OnJobSelected.Invoke(classJob);
             }
 
-            if ((index + 1) % 2 != 0)
-            {
-                ImGui.SameLine(); 
-            }
+            ImGui.SetCursorPosY(cursorPos);
+            ImGui.Image(dalamudTextureWrap.ImGuiHandle, new Vector2(64, 64));
+            ImGui.SameLine();
+            ImGuiExt.IndentV(14);
+            ImGui.Text(classJob.Name.RawString.Capitalize());
+            ImGui.EndGroup();
         }
+
         ImGui.EndGroup();
-        
-        // ImGui.GetWindowDrawList().AddRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), Colors.FadedText);
-        
-        ImGui.SetCursorScreenPos(ImGui.GetItemRectMax() - new Vector2(-10, ImGui.GetItemRectSize().Y));
+
+
+        var padding = (Vector2.One * 10);
+        var itemRectMin = ImGui.GetItemRectMin() - padding;
+        var itemRectMax = ImGui.GetItemRectMax() + padding with { X = padding.X * 2 };
+        var rectWidth = itemRectMax.X - itemRectMin.X;
+
+        imDrawListPtr.AddRect(itemRectMin, itemRectMax, Colors.FadedText, 10);
+
+        var imgSize = Vector2.One * 64;
+        var imgStartPoint = itemRectMin + new Vector2((rectWidth - imgSize.X) / 2, imgSize.Y * -0.5f);
+        var imgEndPoint = imgStartPoint + imgSize;
+
+        imDrawListPtr.AddImage(classJobs.First().GetRoleIcon()!.ImGuiHandle, imgStartPoint, imgEndPoint);
+
+        ImGui.SameLine(0, 50);
     }
 }

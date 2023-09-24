@@ -10,7 +10,7 @@ using RotationGuide.Utils;
 
 namespace RotationGuide.Windows;
 
-public class ActionSearchPopup
+public class ActionSearchDialog
 {
     private const int WindowPadding = 10;
     private const int RowHeight = 80;
@@ -27,9 +27,9 @@ public class ActionSearchPopup
     private TaskCompletionSource<Action> selectedActionTask;
     private bool isOpen = false;
     
-    public static ActionSearchPopup Instance { get; private set; } = new();
+    public static ActionSearchDialog Instance { get; private set; } = new();
 
-    private ActionSearchPopup() { }
+    private ActionSearchDialog() { }
 
     public ClassJob Job
     {

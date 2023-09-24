@@ -61,8 +61,7 @@ public class RotationRenderer : Renderer
         {
             if (ImGuiExt.IsOverflowing(new Vector2(200, 0)) && ImGui.GetContentRegionAvail().Y > 450)
             {
-                PluginLog.Debug(ImGui.GetContentRegionAvail().Y.ToString());
-                // This logic "closes" the row and forces starting a new one
+                // This logic "closes" the row and forces starting a new one, warping the the rotation 
                 ImGui.EndGroup();
                 ImGui.BeginGroup();
                 ImGui.SetCursorPos(startingPosition with { Y = startingPosition.Y + columnHeight });

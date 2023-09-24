@@ -14,8 +14,10 @@ public class Rotation
     public string Patch;
 
     private List<IRotationNode> nodes;
+
+    [JsonInclude]
     public bool HasPullIndicator { get; private set; }
-    
+
     [JsonInclude]
     public IRotationNode[] Nodes
     {
@@ -57,7 +59,7 @@ public class Rotation
 
         nodes.Add(new PullIndicatorNode());
         HasPullIndicator = true;
-        
+
         OnRotationChanged(this);
     }
 
