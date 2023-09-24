@@ -120,6 +120,7 @@ public class RotationPageRenderer : Renderer
 
         ImGui.EndGroup();
 
+        ActionSearchDialog.Instance.Render();
         BuilderFooter.Render();
     }
 

@@ -1,45 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: builder done for now (really now)">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide.sln" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide.sln.DotSettings" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Configuration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Data/Job.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Data/Rotation.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Plugin.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/RotationGuide.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/RotationGuide.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Services/RotationDataService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/AnimationEasings.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/ArrayUtils.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Colors.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Compression.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/DrawUtils.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/FileUtils.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/Fonts.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/ImGuiExt.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Utils/StringUtils.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/ActionSearchDialog.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/BuilderFooter.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/ChooseJobRenderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/CreateRotationDialog.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/MenuRenderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationBuilderRenderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationListRenderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/Renderers/RotationRenderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Builder/RotationBuilderWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Components/WindowFooter.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/ConfigWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/MainWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Renderer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/RotationWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/Windows/Transition.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationGuide/packages.lock.json" beforeDir="false" />
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="chore: changed name of project">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationRenderer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +68,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="434000" />
+      <workItem from="1695527644520" duration="1342000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -133,7 +98,21 @@
       <option name="project" value="LOCAL" />
       <updated>1695527127121</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="chore: changed name of project">
+      <created>1695528232186</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1695528232186</updated>
+    </task>
+    <task id="LOCAL-00006" summary="chore: changed name of project">
+      <created>1695528498073</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1695528498073</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,6 +135,7 @@
     <MESSAGE value="init" />
     <MESSAGE value="feat: builder done for now" />
     <MESSAGE value="feat: builder done for now (really now)" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: builder done for now (really now)" />
+    <MESSAGE value="chore: changed name of project" />
+    <option name="LAST_COMMIT_MESSAGE" value="chore: changed name of project" />
   </component>
 </project>
