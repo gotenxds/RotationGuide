@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="fix: fixed rendering of action search when clicking from inside the rotation renderer.">
-      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Components/Router.cs" afterDir="false" />
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: moved routing logic to a dedicated router class">
+      <change afterPath="$PROJECT_DIR$/Data/actionIconBorder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Data/ogcdBar.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Data/FFAction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Utils/Images.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Utils/Vector2Utils.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationViewerConfigSideWindow.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationViewerWindow.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/VerticalRotationRenderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationListRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationListRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/RotationBuilderWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Builder/RotationBuilderWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Plugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Plugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/RotationMaster.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/RotationMaster.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/DrawUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/DrawUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/ActionSearchDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/ActionSearchDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/BuilderFooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderFooter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/ChooseJobRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/ChooseJobScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/CreateRotationDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/CreateRotationDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/MenuRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/MenuScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationListRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationListRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/Renderers/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Builder/RotationBuilderWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/RotationBuilderWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Renderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Screen.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +52,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/d8/0ca9632d/ImGuiStylePtr.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/e2/35148e96/ImGuiWindowFlags.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/ef/d7543ad8/ImGui.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e83a291283eb4ff8ad103afbb06d2a77119e10/be/99620bc1/Matrix2x2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/333fbcc1d01c7ebc2254876783473d65b0347203eacc6274532761d4a581b/ClassJob.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4eae6449caa21e90c2ff2d63846343457a0e4192fb25892da80d78feb4774f/JsonSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/76a7b4387866adc31f9e317277cff4e5a723e96e76b52dd8afe066edf1abf9c3/Array.cs" root0="SKIP_HIGHLIGHTING" />
@@ -49,16 +70,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;SolutionBuilderGeneralOptionsPage&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -69,7 +90,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="2801000" />
+      <workItem from="1695527644520" duration="51855000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -120,7 +141,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695529024469</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="feat: moved routing logic to a dedicated router class">
+      <created>1695530510275</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1695530510275</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,6 +173,7 @@
     <MESSAGE value="feat: builder done for now (really now)" />
     <MESSAGE value="chore: changed name of project" />
     <MESSAGE value="fix: fixed rendering of action search when clicking from inside the rotation renderer." />
-    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed rendering of action search when clicking from inside the rotation renderer." />
+    <MESSAGE value="feat: moved routing logic to a dedicated router class" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: moved routing logic to a dedicated router class" />
   </component>
 </project>

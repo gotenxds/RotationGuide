@@ -21,30 +21,12 @@ public class ImGuiExt
     {
         var cursorPos = ImGui.GetCursorPos() + cursorPosOffset;
         var windowSize = ImGui.GetWindowSize();
-        
+
         return cursorPos.X < 0 || cursorPos.Y < 0 || cursorPos.X > windowSize.X || cursorPos.Y > windowSize.Y;
     }
-    
-    // This will include the header and resizeButton 
-    public static bool IsMouseHoverWindow()
-    {
-        var windowStart = ImGui.GetWindowPos();
-        var headerSize = ImGui.GetWindowSize() with { Y = ImGui.GetWindowContentRegionMin().Y };
-        
-        return IsBoundedBy(ImGui.GetMousePos(), windowStart - headerSize, windowStart + headerSize);
-    }
 
-  public static bool IsBoundedBy(Vector2 cursor, Vector2 minBounds, Vector2 maxBounds)
+    public static float CalcTextSize(string str, float fontSize)
     {
-        if (cursor.X >= minBounds.X && cursor.Y >= minBounds.Y)
-        {
-            if (cursor.X <= maxBounds.X && cursor.Y <= maxBounds.Y)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return fontSize * str.Length;
     }
-    
 }

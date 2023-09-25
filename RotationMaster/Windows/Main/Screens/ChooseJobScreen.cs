@@ -14,7 +14,7 @@ using Action = System.Action;
 
 namespace RotationMaster.Windows;
 
-public class ChooseJobRenderer : Renderer
+public class ChooseJobScreen : Screen
 {
     private List<ClassJob> tanks = new();
     private List<ClassJob> healers = new();
@@ -24,7 +24,7 @@ public class ChooseJobRenderer : Renderer
 
     public event Action<ClassJob> OnJobSelected;
 
-    public ChooseJobRenderer()
+    public ChooseJobScreen()
     {
         foreach (var classJob in Plugin.DataManager.GetExcelSheet<ClassJob>())
         {

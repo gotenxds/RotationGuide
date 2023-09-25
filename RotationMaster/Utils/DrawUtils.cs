@@ -1,5 +1,7 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using ImGuiNET;
+using ImGuiScene;
 
 namespace RotationMaster.Utils;
 
@@ -60,8 +62,37 @@ public static class DrawUtils
         return (min, max);
     }
 
-    // private static void DrawFloatingImageButton(ImDrawListPtr drawListPtr)
-    // {
-    //     drawListPtr.addIma
-    // }
+    public static void RenderRotatedImage(TextureWrap imageTexture, float rotationAngleDegrees, Vector2 size, Vector2 position)
+    {
+        var angleRadians = MathF.PI * rotationAngleDegrees / 180.0f;
+        var cos = MathF.Cos(angleRadians);
+        var sin = MathF.Sin(angleRadians);
+        
+        var rotationMatrix = new Matrix3x2(
+            cos, -sin,
+            sin, cos,
+            0.0f, 0.0f
+        );
+        
+        var vertices = new Vector2[]
+        {
+            new(-size.X / 2, -size.Y / 2), // Top-left
+            new(size.X / 2, -size.Y / 2),  // Top-right
+            new(size.X / 2, size.Y / 2),   // Bottom-right
+            new(-size.X / 2, size.Y / 2),  // Bottom-left
+        };
+        
+        for (var i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] = Vector2.Transform(vertices[i], rotationMatrix) + position;
+        }
+        
+        ImGui.GetWindowDrawList().AddImageQuad(
+            imageTexture.ImGuiHandle,
+            vertices[0],
+            vertices[1],
+            vertices[2],
+            vertices[3]
+        );
+    }
 }

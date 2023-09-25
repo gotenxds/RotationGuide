@@ -10,7 +10,7 @@ using RotationMaster.Utils;
 
 namespace RotationMaster.Windows;
 
-public class MenuRenderer : Renderer
+public class MenuScreen : Screen
 { 
     public event Action OnGoToCreateChooseJob;
     private RotationListRenderer rotationListRenderer = new();

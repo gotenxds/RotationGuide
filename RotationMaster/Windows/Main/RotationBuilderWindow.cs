@@ -24,9 +24,9 @@ public class RotationBuilderWindow : Window, IDisposable
     
     private Plugin Plugin;
 
-    private Dictionary<BuilderScreen, Renderer> ModeToRenderer { get; init; }
+    private Dictionary<BuilderScreen, Screen> ModeToRenderer { get; init; }
     
-    public RotationBuilderWindow(Plugin plugin) : base("Rotation Builder", ImGuiWindowFlags.HorizontalScrollbar)
+    public RotationBuilderWindow(Plugin plugin) : base("Rotation Master", ImGuiWindowFlags.HorizontalScrollbar)
     {
         Size = new Vector2(500, 320);
         SizeCondition = ImGuiCond.FirstUseEver;
@@ -40,11 +40,11 @@ public class RotationBuilderWindow : Window, IDisposable
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
         
-        var menu = new MenuRenderer();
-        var chooseJobRenderer = new ChooseJobRenderer();
-        var rotationPageRenderer = new RotationPageRenderer();
+        var menu = new MenuScreen();
+        var chooseJobRenderer = new ChooseJobScreen();
+        var rotationPageRenderer = new RotationBuilderScreen();
 
-        ModeToRenderer = new Dictionary<BuilderScreen, Renderer>
+        ModeToRenderer = new Dictionary<BuilderScreen, Screen>
         {
             { BuilderScreen.Menu, menu },
             { BuilderScreen.CreateChooseJob, chooseJobRenderer },

@@ -30,24 +30,18 @@ public struct OGCDClickEventArgs
     public int InnerIndex;
 }
 
-public class RotationRenderer : Renderer
+public class RotationBuilderRenderer : Screen
 {
     private const int ActionIconSize = 64;
     private const int ActionMargin = ActionIconSize / 2;
     public Rotation Rotation { get; set; }
     public event Action<ActionClickEventArgs> OnActionClick;
     public event Action<OGCDClickEventArgs> OnOGCDClick;
-
-    private Dictionary<uint, Action> actionsById;
+    
     private int currentlyEditingActionTime = -1;
     private bool shouldFocusActionTimeEditor = false;
 
     public bool IsEditing => currentlyEditingActionTime != -1;
-
-    public RotationRenderer()
-    {
-        actionsById = Plugin.DataManager.GetExcelSheet<Action>().ToDictionary(a => a.RowId);
-    }
 
     public override void Render(Transition transition = Transition.None, float time = 0)
     {
@@ -70,7 +64,7 @@ public class RotationRenderer : Renderer
             var rotationNode = Rotation.Nodes[index];
             switch (rotationNode)
             {
-                case GCDActionNode actionNode:
+                case Data.GCDActionNode actionNode:
                 {
                     RenderGCDAction(actionNode, index, drawList);
                     ImGui.SameLine(0, ActionMargin);
@@ -98,7 +92,7 @@ public class RotationRenderer : Renderer
 
     private IntPtr GetIconHandle(uint actionId)
     {
-        return Plugin.TextureProvider.GetIcon(actionsById[actionId].Icon).ImGuiHandle;
+        return Plugin.TextureProvider.GetIcon(FFAction.ById(actionId).Icon).ImGuiHandle;
     }
 
     private void RenderOGCDActions(OGCDActionsNode actionsNode, int index, ImDrawListPtr drawList)
@@ -138,7 +132,7 @@ public class RotationRenderer : Renderer
 
             ImGui.PushID($"ogcdButton-{index}-{innerIndex}");
             ImGui.SetCursorScreenPos(buttonPositions[innerIndex]);
-            if (actionsById.TryGetValue(actionsNodeId, out var action))
+            if (FFAction.TryById(actionsNodeId, out var action))
             {
                 ImGui.ImageButton(GetIconHandle(actionsNodeId), Vector2.One * ogcdIconSize);
                 var split = SplitActionName(action.Name);
@@ -183,7 +177,7 @@ public class RotationRenderer : Renderer
         drawList.AddLine(separatorPointA, separatorPointB, Colors.OGCDBarSeperator, rectBorderSize);
     }
 
-    private void RenderGCDAction(GCDActionNode actionNode, int index, ImDrawListPtr drawList)
+    private void RenderGCDAction(Data.GCDActionNode actionNode, int index, ImDrawListPtr drawList)
     {
         RenderAction(actionNode, index, drawList);
     }
@@ -233,7 +227,7 @@ public class RotationRenderer : Renderer
         var (size, type) = actionNode switch
         {
             PrePullActionNode => (actionIconSize: ActionIconSize, ActionType.PREPULL),
-            GCDActionNode => (actionIconSize: ActionIconSize, ActionType.GCD),
+            Data.GCDActionNode => (actionIconSize: ActionIconSize, ActionType.GCD),
             _ => throw new ArgumentException()
         };
 
@@ -252,7 +246,7 @@ public class RotationRenderer : Renderer
         var borderRectWidth = borderRectMax.X - borderRectMin.X;
         var borderRectCenter = borderRectMin.X + borderRectWidth / 2;
 
-        var actionName = actionsById[actionNode.Id].Name;
+        var actionName = FFAction.ById(actionNode.Id).Name;
 
         var split = SplitActionName(actionName);
 
@@ -284,9 +278,9 @@ public class RotationRenderer : Renderer
 
     private void RenderPullIndicator(ImDrawListPtr drawList)
     {
-        ImGuiExt.IndentV(Plugin.PullBarImage.Height * -0.25f);
-        ImGui.Image(Plugin.PullBarImage.ImGuiHandle,
-                    new Vector2(Plugin.PullBarImage.Width, Plugin.PullBarImage.Height));
+        ImGuiExt.IndentV(Images.PullBarImage.Height * -0.25f);
+        ImGui.Image(Images.PullBarImage.ImGuiHandle,
+                    new Vector2(Images.PullBarImage.Width, Images.PullBarImage.Height));
 
         var pullBarRectMin = ImGui.GetItemRectMin();
         drawList.AddText(new Vector2(pullBarRectMin.X - 25, pullBarRectMin.Y - 35), ImGui.GetColorU32(Vector4.One),

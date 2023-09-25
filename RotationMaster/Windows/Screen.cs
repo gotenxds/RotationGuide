@@ -3,7 +3,7 @@ using RotationMaster.Utils;
 
 namespace RotationMaster.Windows;
 
-public abstract class Renderer
+public abstract class Screen
 {
     protected float BaseCursorHeight;
     public abstract void Render(Transition transition = Transition.None, float time = 0);

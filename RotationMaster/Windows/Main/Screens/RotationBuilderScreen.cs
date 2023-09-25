@@ -11,7 +11,7 @@ using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationMaster.Windows;
 
-public class RotationPageRenderer : Renderer
+public class RotationBuilderScreen : Screen
 {
     public Rotation Rotation
     {
@@ -25,35 +25,35 @@ public class RotationPageRenderer : Renderer
 
             rotation = value;
             rotation.OnRotationChanged += OnRotationChange;
-            RotationRenderer.Rotation = rotation;
+            RotationBuilderRenderer.Rotation = rotation;
             ActionSearchDialog.Instance.Job = Job;
         }
     }
 
     public ClassJob Job => Data.Job.GetJob(rotation.JobId);
 
-    private RotationRenderer RotationRenderer { get; init; }
+    private RotationBuilderRenderer RotationBuilderRenderer { get; init; }
     private Rotation rotation;
     private bool isEditingName = false;
-    private BuilderFooter BuilderFooter { get; init; }
+    private RotationBuilderFooter RotationBuilderFooter { get; init; }
 
-    public RotationPageRenderer()
+    public RotationBuilderScreen()
     {
-        BuilderFooter = new BuilderFooter(() => !Rotation.HasPullIndicator);
-        RotationRenderer = new RotationRenderer();
+        RotationBuilderFooter = new RotationBuilderFooter(() => !Rotation.HasPullIndicator);
+        RotationBuilderRenderer = new RotationBuilderRenderer();
 
-        BuilderFooter.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
-        BuilderFooter.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
-        BuilderFooter.OnAddPullBarClicked += () => rotation.AddPullIndicator();
+        RotationBuilderFooter.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
+        RotationBuilderFooter.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
+        RotationBuilderFooter.OnAddPullBarClicked += () => rotation.AddPullIndicator();
 
-        RotationRenderer.OnActionClick += async actionClickEventArgs =>
+        RotationBuilderRenderer.OnActionClick += async actionClickEventArgs =>
         {
             var action = await ActionSearchDialog.Instance.Open();
 
             OnActionSelected(action, actionClickEventArgs.Index, actionClickEventArgs.Type);
         };
 
-        RotationRenderer.OnOGCDClick += async actionClickEventArgs =>
+        RotationBuilderRenderer.OnOGCDClick += async actionClickEventArgs =>
         {
             var action = await ActionSearchDialog.Instance.Open();
 
@@ -85,7 +85,7 @@ public class RotationPageRenderer : Renderer
         {
             IActionNode actionNode = actionType switch
             {
-                ActionType.GCD => new GCDActionNode(),
+                ActionType.GCD => new Data.GCDActionNode(),
                 ActionType.PREPULL => new PrePullActionNode(),
                 _ => throw new ArgumentException()
             };
@@ -121,7 +121,7 @@ public class RotationPageRenderer : Renderer
         ImGui.EndGroup();
 
         ActionSearchDialog.Instance.Render();
-        BuilderFooter.Render();
+        RotationBuilderFooter.Render();
     }
 
     private void RenderRotation()
@@ -139,7 +139,7 @@ public class RotationPageRenderer : Renderer
         }
         else
         {
-            RotationRenderer.Render();
+            RotationBuilderRenderer.Render();
         }
     }
 

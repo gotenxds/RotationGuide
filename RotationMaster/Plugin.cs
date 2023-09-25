@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Dalamud.Data;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
-using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
-using ImGuiScene;
 using RotationMaster.Utils;
 using RotationMaster.Windows;
+using RotationMaster.Windows.Viewer;
 
 namespace RotationMaster
 {
@@ -29,8 +24,7 @@ namespace RotationMaster
         public static ITextureProvider TextureProvider { get; private set; }
         public static DalamudPluginInterface PluginInterface { get; private set; }
         public static ChatGui ChatGui { get; private set; }
-
-        public static TextureWrap PullBarImage;
+        public static RotationViewerWindow RotationViewerWindow { get; private set; }
         private ICommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         private Dictionary<string, (Window window, string helpMessage)> Commands { get; init; }
@@ -53,12 +47,16 @@ namespace RotationMaster
             this.Configuration.Initialize(PluginInterface);
 
             Fonts.Init(UiBuilder);
+            Images.Init(pluginInterface);
+
+            RotationViewerWindow = new RotationViewerWindow();
+
+            WindowSystem.AddWindow(RotationViewerWindow);
 
             Commands = new Dictionary<string, (Window window, string helpMessage)>()
             {
                 { "/rtm", (new ConfigWindow(this), "Configuration") },
-                { "/rtg", (new RotationWindow(this), "The rotation runner") },
-                { "/rtb", (new RotationBuilderWindow(this), "Open rotation builder") },
+                { "/rtb", (new RotationBuilderWindow(this), "Open Rotation Master") },
             };
 
             foreach (var (command, (window, helpMessage)) in Commands)
@@ -66,9 +64,6 @@ namespace RotationMaster
                 WindowSystem.AddWindow(window);
                 this.CommandManager.AddHandler(command, new CommandInfo(OnCommand) { HelpMessage = helpMessage });
             }
-
-            var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "pullBar.png");
-            PullBarImage = PluginInterface.UiBuilder.LoadImage(imagePath);
 
             PluginInterface.UiBuilder.Draw += DrawUI;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;

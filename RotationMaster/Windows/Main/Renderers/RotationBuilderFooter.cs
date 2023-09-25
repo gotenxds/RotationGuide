@@ -5,7 +5,7 @@ using ImGuiNET;
 
 namespace RotationMaster.Windows;
 
-public class BuilderFooter
+public class RotationBuilderFooter
 {
     public event Action OnAddPrePullActionClicked;
     public event Action OnAddActionClicked;
@@ -15,7 +15,7 @@ public class BuilderFooter
 
     private WindowFooter footer;
 
-    public BuilderFooter(Func<bool> enablePullActions)
+    public RotationBuilderFooter(Func<bool> enablePullActions)
     {
         footer = new WindowFooter("Tools", RenderChild);
         this.enablePullActions = enablePullActions;

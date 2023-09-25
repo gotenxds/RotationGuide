@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using RotationMaster.Data;
 using RotationMaster.Services;
@@ -16,12 +17,12 @@ internal enum RotationTableColumn
     Actions = 2,
 }
 
-public class RotationListRenderer : Renderer
+public class RotationListRenderer
 {
     private const int JobColumnWidth = 45;
     private const int JobImageSize = 32;
     private const int ActionButtonSize = 40;
-    private const int ActionColumnSize = ActionButtonSize * 3 + 20;
+    private const int ActionColumnSize = (ActionButtonSize * 4) + 30;
     private const string AreYouSurePopupId = "RotationList_AreYouSurePopup";
 
     private Rotation? rotationToDelete;
@@ -36,7 +37,7 @@ public class RotationListRenderer : Renderer
 
     public static event Action<Rotation> OnEditClick;
 
-    public override void Render(Transition transition = Transition.None, float time = 0)
+    public void Render()
     {
         var columns = Enum.GetValues<RotationTableColumn>();
 
@@ -137,7 +138,6 @@ public class RotationListRenderer : Renderer
         {
             OnEditClick?.Invoke(rotation);
         }
-
         ImGui.PopID();
 
         ImGui.SameLine();
@@ -146,7 +146,6 @@ public class RotationListRenderer : Renderer
         {
             rotationToDelete = rotation;
         }
-
         ImGui.PopID();
         
         ImGui.SameLine();
@@ -156,8 +155,19 @@ public class RotationListRenderer : Renderer
             ImGui.SetClipboardText(RotationDataService.Export(rotation));
             Plugin.ChatGui.Print("Rotation exported into clipboard");
         }
-
         ImGui.PopID();
+        
+        ImGui.SameLine();
+        ImGui.PushID($"{rotation.Id}_view");
+        if (ImGui.Button(FontAwesomeIcon.Eye.ToIconString(), Vector2.One * ActionButtonSize))
+        {
+            PluginLog.Debug("sd");
+            Plugin.RotationViewerWindow.IsOpen = true;
+            Plugin.RotationViewerWindow.Rotation = rotation;
+
+        }
+        ImGui.PopID();
+        
         ImGui.PopFont();
         ImGui.Unindent(5);
     }
