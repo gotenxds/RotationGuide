@@ -77,7 +77,6 @@ public class RotationBuilderRenderer : RotationRenderer
                 case OGCDActionsNode ogcdActionNode:
                 {
                     RenderOGCDActions(ogcdActionNode, index, drawList);
-                    // ImGui.SameLine(0, 3);
                     break;
                 }
                 case PrePullActionNode prePullActionNode:
@@ -138,8 +137,15 @@ public class RotationBuilderRenderer : RotationRenderer
             {
                 ImGui.ImageButton(FFAction.GetIconHandle(actionId), OGCDActionIconSize * Vector2.One);
 
+                var borderColor = ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight);
+
+                if (ImGui.IsItemHovered())
+                {
+                    borderColor = ImGui.GetColorU32(ImGuiCol.ButtonHovered);
+                }
+
                 var (borderRectMin, borderRectMax) =
-                    DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax());
+                    DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), borderColor);
 
                 RenderActionName(drawList, borderRectMax, borderRectMin, actionId, OGCDActionFontSize, 15,
                                  innerIndex != 1);
@@ -163,11 +169,11 @@ public class RotationBuilderRenderer : RotationRenderer
     }
 
     private static (Vector2 min, Vector2 max) DrawBorderAroundAction(
-        ImDrawListPtr drawList, Vector2 imageMin, Vector2 imageMax)
+        ImDrawListPtr drawList, Vector2 imageMin, Vector2 imageMax, uint color)
     {
         var borderRectMin = imageMin - (Vector2.One * 2);
         var borderRectMax = imageMax + (Vector2.One * 2);
-        drawList.AddRect(borderRectMin, borderRectMax, ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight), 10,
+        drawList.AddRect(borderRectMin, borderRectMax, color, 10,
                          ImDrawFlags.None, 4);
 
         return (borderRectMin, borderRectMax);
@@ -234,8 +240,15 @@ public class RotationBuilderRenderer : RotationRenderer
             OnActionClick.Invoke(new ActionClickEventArgs() { Index = index, Type = type });
         }
 
+        var borderColor = ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight);
+
+        if (ImGui.IsItemHovered())
+        {
+            borderColor = ImGui.GetColorU32(ImGuiCol.ButtonHovered);
+        }
+
         var (borderRectMin, borderRectMax) =
-            DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax());
+            DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), borderColor);
 
         RenderActionName(drawList, borderRectMax, borderRectMin, actionNode.Id, GCDActionFontSize, 0);
     }

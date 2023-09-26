@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: Finished the horizontal viewer for now">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Plugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Plugin.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/Images.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/Images.cs" afterDir="false" />
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: moved the builder to work with the rotation renderer">
       <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationViewerWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationViewerWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/VerticalRotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/VerticalRotationRenderer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +69,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="66736000" />
+      <workItem from="1695527644520" duration="66989000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -141,7 +134,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695665434012</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="feat: moved the builder to work with the rotation renderer">
+      <created>1695731657770</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1695731657770</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,6 +168,7 @@
     <MESSAGE value="fix: fixed rendering of action search when clicking from inside the rotation renderer." />
     <MESSAGE value="feat: moved routing logic to a dedicated router class" />
     <MESSAGE value="feat: Finished the horizontal viewer for now" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: Finished the horizontal viewer for now" />
+    <MESSAGE value="feat: moved the builder to work with the rotation renderer" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: moved the builder to work with the rotation renderer" />
   </component>
 </project>
