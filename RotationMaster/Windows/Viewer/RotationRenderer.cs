@@ -1,3 +1,4 @@
+using System;
 using System.Numerics;
 using Dalamud.Interface;
 using ImGuiNET;
@@ -10,44 +11,57 @@ public class RotationRenderer
 {
     protected virtual int ActionBaseIconSize => 64;
 
-    protected float actionIconSize;
-    protected float ogcdActionIconSize;
-    protected float actionMargin;
-    protected float gcdActionFontSize;
-    protected float ogcdActionFontSize;
-    protected Vector2 pullBarSize;
-    protected Vector2 ogcdBarSize;
-    protected Vector2 prepullTimeOffset;
-
-    protected readonly RotationViewerConfigSideWindow config;
-    protected float UIScale => config.UIScale;
-
-    public RotationRenderer(RotationViewerConfigSideWindow config)
+    protected float UIScale
     {
-        this.config = config;
-        config.OnUIScaleChanged += _ => RecalculateUiSizes();
-
-        RecalculateUiSizes();
+        get => LastUiScale;
+        set
+        {
+            var last = LastUiScale;
+            LastUiScale = value;
+            
+            if (Math.Abs(last - value) > 0.001f)
+            {
+                RecalculateUiSizes();    
+            }   
+        }
     }
 
-    public virtual void Render(Rotation rotation)
+    protected bool HideActionNames;
+    protected float ActionIconSize;
+    protected float OGCDActionIconSize;
+    protected float ActionMargin;
+    protected float GCDActionFontSize;
+    protected float OGCDActionFontSize;
+    protected Vector2 PullBarSize;
+    protected Vector2 OGCDBarSize;
+    protected Vector2 PrepullTimeOffset;
+    protected float LastUiScale;
+    public RotationRenderer()
     {
+        UIScale = 1;
+    }
+
+    public virtual void Render(Rotation rotation, float uiScale, bool hideActionNames = false)
+    {
+        UIScale = uiScale;
+        HideActionNames = hideActionNames;
+        
         RenderRotation(rotation);
     }
 
     protected virtual void RecalculateUiSizes()
     {
-        actionIconSize = ActionBaseIconSize * UIScale;
-        ogcdActionIconSize = actionIconSize * 0.8f;
+        ActionIconSize = ActionBaseIconSize * UIScale;
+        OGCDActionIconSize = ActionIconSize * 0.8f;
 
-        gcdActionFontSize = 32 * UIScale;
-        ogcdActionFontSize = 24 * UIScale;
+        GCDActionFontSize = 32 * UIScale;
+        OGCDActionFontSize = 24 * UIScale;
 
-        actionMargin = actionIconSize * 0.6f;
+        ActionMargin = ActionIconSize * 0.6f;
 
-        pullBarSize = new Vector2(Images.PullBarImage.Width, Images.PullBarImage.Height) * UIScale;
-        ogcdBarSize = new Vector2(Images.OGCDBarImage.Width, Images.OGCDBarImage.Height) * UIScale;
-        prepullTimeOffset = new Vector2(ActionBaseIconSize * (0.25f * UIScale), -gcdActionFontSize);
+        PullBarSize = new Vector2(Images.PullBarImage.Width, Images.PullBarImage.Height) * UIScale;
+        OGCDBarSize = new Vector2(Images.OGCDBarImage.Width, Images.OGCDBarImage.Height) * UIScale;
+        PrepullTimeOffset = new Vector2(ActionBaseIconSize * (0.25f * UIScale), -GCDActionFontSize);
     }
 
     protected virtual void RenderRotation(Rotation rotation)
@@ -60,30 +74,31 @@ public class RotationRenderer
 
         ImGui.BeginGroup();
 
-        foreach (var rotationNode in rotation.Nodes)
+        for (var index = 0; index < rotation.Nodes.Length; index++)
         {
+            var rotationNode = rotation.Nodes[index];
             switch (rotationNode)
             {
                 case GCDActionNode actionNode:
                 {
-                    RenderGCDAction(actionNode, drawList);
-                    ImGui.SameLine(0, actionMargin);
+                    RenderGCDAction(drawList, actionNode, index);
+                    ImGui.SameLine(0, ActionMargin);
                     break;
                 }
                 case OGCDActionsNode ogcdActionNode:
                 {
-                    RenderOGCDActions(ogcdActionNode, drawList);
+                    RenderOGCDActions(drawList, ogcdActionNode, index);
                     ImGui.SameLine(0);
                     break;
                 }
                 case PrePullActionNode prePullActionNode:
-                    RenderPrepullAction(prePullActionNode, drawList);
-                    ImGui.SameLine(0, actionMargin);
+                    RenderPrepullAction(drawList, prePullActionNode, index);
+                    ImGui.SameLine(0, ActionMargin);
                     break;
                 case PullIndicatorNode pullIndicatorNode:
                     RenderPullIndicator(drawList);
 
-                    ImGui.SameLine(0, actionMargin);
+                    ImGui.SameLine(0, ActionMargin);
                     break;
             }
         }
@@ -93,71 +108,71 @@ public class RotationRenderer
         ImGui.GetStyle().ItemSpacing.X = originalItemSpacingX;
     }
 
-    protected virtual void RenderGCDAction(Data.GCDActionNode actionNode, ImDrawListPtr drawList)
+    protected virtual void RenderGCDAction(ImDrawListPtr drawList, GCDActionNode actionNode, int index)
     {
-        RenderAction(actionNode, drawList);
+        RenderAction(drawList, actionNode, index);
     }
 
-    protected virtual void RenderPrepullAction(PrePullActionNode actionNode, ImDrawListPtr drawList)
+    protected virtual void RenderPrepullAction(ImDrawListPtr drawList, PrePullActionNode actionNode, int index)
     {
         ImGui.BeginGroup();
-        RenderAction(actionNode, drawList);
+        RenderAction(drawList, actionNode, index);
 
 
         var cursorPos = ImGui.GetItemRectMin();
 
         var text = $"-{actionNode.Time}s";
-        var textPosition = cursorPos + prepullTimeOffset;
+        var textPosition = cursorPos + PrepullTimeOffset;
 
-        drawList.AddText(UiBuilder.DefaultFont, gcdActionFontSize, textPosition, ImGui.GetColorU32(Vector4.One), text);
+        drawList.AddText(UiBuilder.DefaultFont, GCDActionFontSize, textPosition, ImGui.GetColorU32(Vector4.One), text);
 
         ImGui.EndGroup();
     }
 
-    protected virtual void RenderAction(IActionNode actionNode, ImDrawListPtr drawList)
+    protected virtual void RenderAction(ImDrawListPtr drawList, IActionNode actionNode, int index)
     {
-        ImGui.Image(FFAction.GetIconHandle(actionNode.Id, true), Vector2.One * actionIconSize);
+        ImGui.Image(FFAction.GetIconHandle(actionNode.Id, true), Vector2.One * ActionIconSize);
         var rectMin = ImGui.GetItemRectMin();
         var rectMax = ImGui.GetItemRectMax();
 
         drawList.AddImage(Images.ActionIconBorderImage.ImGuiHandle, rectMin, rectMax);
 
-        RenderActionName(drawList, rectMax, rectMin, actionNode.Id, gcdActionFontSize, 5);
+        RenderActionName(drawList, rectMax, rectMin, actionNode.Id, GCDActionFontSize, 5);
     }
 
-    protected virtual void RenderOGCDActions(OGCDActionsNode ogcdaNode, ImDrawListPtr drawList)
+    protected virtual void RenderOGCDActions(ImDrawListPtr drawList, OGCDActionsNode ogcdaNode, int index)
     {
-        ImGui.SameLine(0, -actionMargin);
-        ImGuiExt.IndentV((actionIconSize / 2) - (ogcdBarSize.Y / 2));
-        ImGui.Image(Images.OGCDBarImage.ImGuiHandle, ogcdBarSize);
+        ImGui.SameLine(0, -ActionMargin);
+        ImGuiExt.IndentV((ActionIconSize / 2) - (OGCDBarSize.Y / 2));
+        ImGui.Image(Images.OGCDBarImage.ImGuiHandle, OGCDBarSize);
         var itemRectMin = ImGui.GetItemRectMin();
         var itemRectMax = ImGui.GetItemRectMax();
 
-        var centerPoint = itemRectMax - (ogcdBarSize * 0.5f);
+        var centerPoint = itemRectMax - (OGCDBarSize * 0.5f);
 
         var yOffset = 10 * UIScale;
 
-        var centerActionImageMin = new Vector2(centerPoint.X - (ogcdActionIconSize / 2), itemRectMax.Y + yOffset);
-        var firstActionImageMin = new Vector2(centerPoint.X + (ogcdActionIconSize * -1.5f),
-                                              itemRectMin.Y - ogcdActionIconSize - yOffset);
-        var lastActionImageMin = firstActionImageMin + new Vector2(2 * ogcdActionIconSize, 0);
+        var centerActionImageMin = new Vector2(centerPoint.X - (OGCDActionIconSize / 2), itemRectMax.Y + yOffset);
+        var firstActionImageMin = new Vector2(centerPoint.X + (OGCDActionIconSize * -1.5f),
+                                              itemRectMin.Y - OGCDActionIconSize - yOffset);
+        var lastActionImageMin = firstActionImageMin + new Vector2(2 * OGCDActionIconSize, 0);
 
-        for (var index = 0; index < ogcdaNode.Ids.Length; index++)
+        for (var innerIndex = 0; innerIndex < ogcdaNode.Ids.Length; innerIndex++)
         {
-            var actionId = ogcdaNode.Ids[index];
+            var actionId = ogcdaNode.Ids[innerIndex];
 
             if (FFAction.TryById(actionId, out _))
             {
-                var imageMin = index == 0 ? firstActionImageMin
-                               : index == 1 ? centerActionImageMin
+                var imageMin = innerIndex == 0 ? firstActionImageMin
+                               : innerIndex == 1 ? centerActionImageMin
                                : lastActionImageMin;
 
-                var imageMax = imageMin + new Vector2(ogcdActionIconSize, ogcdActionIconSize);
+                var imageMax = imageMin + new Vector2(OGCDActionIconSize, OGCDActionIconSize);
 
                 drawList.AddImage(FFAction.GetIconHandle(actionId), imageMin, imageMax);
                 drawList.AddImage(Images.ActionIconBorderImage.ImGuiHandle, imageMin, imageMax);
 
-                RenderActionName(drawList, imageMax, imageMin, actionId, ogcdActionFontSize, 15, index != 1);
+                RenderActionName(drawList, imageMax, imageMin, actionId, OGCDActionFontSize, 15, innerIndex != 1);
             }
         }
     }
@@ -166,7 +181,7 @@ public class RotationRenderer
         ImDrawListPtr drawList, Vector2 imageMax, Vector2 imageMin, uint actionId, float fontSize, float xOffset,
         bool reverse = false)
     {
-        if (config.HideActionNames)
+        if (HideActionNames)
         {
             return;
         }
@@ -192,13 +207,13 @@ public class RotationRenderer
 
     protected virtual void RenderPullIndicator(ImDrawListPtr drawList)
     {
-        ImGuiExt.IndentV(pullBarSize.Y * -0.25f);
-        ImGui.Image(Images.PullBarImage.ImGuiHandle, pullBarSize);
+        ImGuiExt.IndentV(PullBarSize.Y * -0.25f);
+        ImGui.Image(Images.PullBarImage.ImGuiHandle, PullBarSize);
 
         var pullBarRectMin = ImGui.GetItemRectMin();
         var textPosition = new Vector2(pullBarRectMin.X - (25 * UIScale), pullBarRectMin.Y - (35 * UIScale));
 
-        drawList.AddText(UiBuilder.DefaultFont, gcdActionFontSize, textPosition, ImGui.GetColorU32(Vector4.One),
+        drawList.AddText(UiBuilder.DefaultFont, GCDActionFontSize, textPosition, ImGui.GetColorU32(Vector4.One),
                          "PULL");
     }
 }

@@ -46,7 +46,7 @@ public class RotationViewerWindow : Window
         PositionCondition = ImGuiCond.FirstUseEver;
 
         configSideWindow = new RotationViewerConfigSideWindow();
-        horizontalRotationRenderer = new RotationRenderer(configSideWindow);
+        horizontalRotationRenderer = new RotationRenderer();
     }
 
     public override void Draw()
@@ -65,7 +65,7 @@ public class RotationViewerWindow : Window
         ImGui.Indent(20);
         ImGuiExt.IndentV(100 * UIScale);
 
-        horizontalRotationRenderer.Render(Rotation);
+        horizontalRotationRenderer.Render(Rotation, UIScale, configSideWindow.HideActionNames);
     }
 
     private void RenderHeader()

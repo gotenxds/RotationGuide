@@ -8,6 +8,7 @@ using ImGuiNET;
 using Lumina.Text;
 using RotationMaster.Data;
 using RotationMaster.Utils;
+using RotationMaster.Windows.Viewer;
 using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationMaster.Windows;
@@ -30,29 +31,32 @@ public struct OGCDClickEventArgs
     public int InnerIndex;
 }
 
-public class RotationBuilderRenderer : Screen
+public class RotationBuilderRenderer : RotationRenderer
 {
-    private const int ActionIconSize = 64;
-    private const int ActionMargin = ActionIconSize / 2;
-    public Rotation Rotation { get; set; }
     public event Action<ActionClickEventArgs> OnActionClick;
     public event Action<OGCDClickEventArgs> OnOGCDClick;
-    
+
     private int currentlyEditingActionTime = -1;
     private bool shouldFocusActionTimeEditor = false;
-
+    private Rotation Rotation;
     public bool IsEditing => currentlyEditingActionTime != -1;
 
-    public override void Render(Transition transition = Transition.None, float time = 0)
+    protected override void RenderRotation(Rotation rotation)
     {
+        Rotation = rotation;
         var drawList = ImGui.GetWindowDrawList();
-        var columnHeight = 3 * ActionIconSize;
+        var columnHeight = 4 * ActionIconSize;
         var startingPosition = ImGui.GetCursorPos();
-                 
+
+        var originalItemSpacingX = ImGui.GetStyle().ItemSpacing.X;
+
+        // We are handling our own spacing here.
+        ImGui.GetStyle().ItemSpacing.X = 0;
+
         ImGui.BeginGroup();
-        for (var index = 0; index < Rotation.Nodes.Length; index++)
+        for (var index = 0; index < rotation.Nodes.Length; index++)
         {
-            if (ImGuiExt.IsOverflowing(new Vector2(200, 0)) && ImGui.GetContentRegionAvail().Y > 450)
+            if (ImGuiExt.IsOverflowing(new Vector2(100, 0)) && ImGui.GetContentRegionAvail().Y > 450)
             {
                 // This logic "closes" the row and forces starting a new one, warping the the rotation 
                 ImGui.EndGroup();
@@ -60,11 +64,11 @@ public class RotationBuilderRenderer : Screen
                 ImGui.SetCursorPos(startingPosition with { Y = startingPosition.Y + columnHeight });
                 startingPosition = ImGui.GetCursorPos();
             }
-            
-            var rotationNode = Rotation.Nodes[index];
+
+            var rotationNode = rotation.Nodes[index];
             switch (rotationNode)
             {
-                case Data.GCDActionNode actionNode:
+                case GCDActionNode actionNode:
                 {
                     RenderGCDAction(actionNode, index, drawList);
                     ImGui.SameLine(0, ActionMargin);
@@ -73,7 +77,7 @@ public class RotationBuilderRenderer : Screen
                 case OGCDActionsNode ogcdActionNode:
                 {
                     RenderOGCDActions(ogcdActionNode, index, drawList);
-                    ImGui.SameLine(0, 34);
+                    // ImGui.SameLine(0, 3);
                     break;
                 }
                 case PrePullActionNode prePullActionNode:
@@ -87,77 +91,63 @@ public class RotationBuilderRenderer : Screen
                     break;
             }
         }
-        ImGui.EndGroup();
-    }
 
-    private IntPtr GetIconHandle(uint actionId)
-    {
-        return Plugin.TextureProvider.GetIcon(FFAction.ById(actionId).Icon).ImGuiHandle;
+        ImGui.EndGroup();
+
+        ImGui.GetStyle().ItemSpacing.X = originalItemSpacingX;
     }
 
     private void RenderOGCDActions(OGCDActionsNode actionsNode, int index, ImDrawListPtr drawList)
     {
-        const float ogcdIconSize = ActionIconSize * .8f;
-        const float halfOgcdSize = ogcdIconSize * 0.5f;
-        const int rectBorderSize = 8;
-        const int offsetY = 16;
-        var barSize = new Vector2(ogcdIconSize * 3.5f, ActionIconSize);
-        
-        var barRectMin = ImGui.GetCursorScreenPos() - new Vector2(12, 0);
-        var barRectMax = barRectMin + barSize;
+        var cursorScreenPositionToReturnTo = ImGui.GetCursorScreenPos();
 
-        var outerRectMin = new Vector2(barRectMin.X - (ActionMargin / 2f), barRectMin.Y + (ActionIconSize * 0.25f));
-        var outerRectMax = new Vector2(barRectMax.X + (ActionMargin * 0.5f), barRectMax.Y - (ActionIconSize * 0.15f));
+        var renderingOnANewLine = cursorScreenPositionToReturnTo.X < ImGui.GetItemRectMax().X;
 
-        var innerRectMin = outerRectMin + (Vector2.One * rectBorderSize);
-        var innerRectMax = outerRectMax - (Vector2.One * rectBorderSize);
+        if (!renderingOnANewLine)
+        {
+            ImGui.SameLine(0, 3);
+        }
 
-        var outerRectSize = outerRectMax - outerRectMin;
-        var innerRectSize = innerRectMax - innerRectMin;
-        var separatorPointA = innerRectMin with { X = innerRectMin.X + (innerRectSize.X * 0.5f) };
-        var separatorPointB = separatorPointA with { Y = innerRectMax.Y - 1 };
+        ImGuiExt.IndentV((ActionIconSize / 2) - (OGCDBarSize.Y / 2));
+        ImGui.Image(Images.OGCDBarImage.ImGuiHandle, OGCDBarSize);
+        var itemRectMin = ImGui.GetItemRectMin();
+        var itemRectMax = ImGui.GetItemRectMax();
 
-        var middleButtonPos = separatorPointA + new Vector2(-halfOgcdSize + 1.5f, halfOgcdSize + offsetY);
-        var leftButtonPos = new Vector2(middleButtonPos.X - (innerRectSize.X * 0.25f),
-                                        outerRectMin.Y - outerRectSize.Y - halfOgcdSize);
-        var rightButtonPos = leftButtonPos + new Vector2(innerRectSize.X * 0.5f, 0);
-        var buttonPositions = new[] { leftButtonPos, middleButtonPos, rightButtonPos };
+        var centerPoint = itemRectMax - (OGCDBarSize * 0.5f);
 
+        var topButtonsYOffset = 16 * UIScale;
+        var centerButtonYOffset = 10 * UIScale;
 
-        ImGui.BeginGroup();
+        var centerActionImageMin =
+            new Vector2(centerPoint.X - (OGCDActionIconSize / 2), itemRectMax.Y + centerButtonYOffset);
+        var firstActionImageMin = new Vector2(centerPoint.X + (OGCDActionIconSize * -1.5f),
+                                              itemRectMin.Y - OGCDActionIconSize - topButtonsYOffset);
+        var lastActionImageMin = firstActionImageMin + new Vector2(2 * OGCDActionIconSize, 0);
 
         for (var innerIndex = 0; innerIndex < actionsNode.Ids.Length; innerIndex++)
         {
-            var actionsNodeId = actionsNode.Ids[innerIndex];
+            var actionId = actionsNode.Ids[innerIndex];
+            var imageMin = innerIndex == 0 ? firstActionImageMin
+                           : innerIndex == 1 ? centerActionImageMin
+                           : lastActionImageMin;
 
             ImGui.PushID($"ogcdButton-{index}-{innerIndex}");
-            ImGui.SetCursorScreenPos(buttonPositions[innerIndex]);
-            if (FFAction.TryById(actionsNodeId, out var action))
+            ImGui.SetCursorScreenPos(imageMin);
+
+            if (FFAction.TryById(actionId, out _))
             {
-                ImGui.ImageButton(GetIconHandle(actionsNodeId), Vector2.One * ogcdIconSize);
-                var split = SplitActionName(action.Name);
+                ImGui.ImageButton(FFAction.GetIconHandle(actionId), OGCDActionIconSize * Vector2.One);
 
-                var buttonMax = ImGui.GetItemRectMax();
-                var buttonCenter = buttonMax.X - (ogcdIconSize / 2);
+                var (borderRectMin, borderRectMax) =
+                    DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax());
 
-                for (var i = 0; i < split.Length; i++)
-                {
-                    var name = split[i];
-                    var textSize = ImGui.CalcTextSize(name);
-
-                    var textYPos = innerIndex == 1
-                                       ? buttonMax.Y + (20 * i)
-                                       : buttonMax.Y - ogcdIconSize - (15 * (split.Length - i)) - 15;
-
-                    drawList.AddText(UiBuilder.DefaultFont, 24,
-                                     new Vector2(buttonCenter - (textSize.X / 2) + 8, textYPos),
-                                     ImGui.GetColorU32(ImGuiCol.Text), name);
-                }
+                RenderActionName(drawList, borderRectMax, borderRectMin, actionId, OGCDActionFontSize, 15,
+                                 innerIndex != 1);
             }
             else
             {
                 ImGui.PushFont(UiBuilder.IconFont);
-                ImGui.Button(FontAwesomeIcon.Plus.ToIconString(), Vector2.One * ogcdIconSize);
+                ImGui.Button(FontAwesomeIcon.Plus.ToIconString(), OGCDActionIconSize * Vector2.One);
                 ImGui.PopFont();
             }
 
@@ -169,23 +159,29 @@ public class RotationBuilderRenderer : Screen
             }
         }
 
-
-        ImGui.EndGroup();
-
-        drawList.AddRectFilled(outerRectMin, outerRectMax, Colors.OGCDBarBorder, 3);
-        drawList.AddRectFilled(innerRectMin, innerRectMax, Colors.OGCDBarInner);
-        drawList.AddLine(separatorPointA, separatorPointB, Colors.OGCDBarSeperator, rectBorderSize);
+        ImGui.SetCursorScreenPos(new Vector2(itemRectMax.X + 2, cursorScreenPositionToReturnTo.Y));
     }
 
-    private void RenderGCDAction(Data.GCDActionNode actionNode, int index, ImDrawListPtr drawList)
+    private static (Vector2 min, Vector2 max) DrawBorderAroundAction(
+        ImDrawListPtr drawList, Vector2 imageMin, Vector2 imageMax)
     {
-        RenderAction(actionNode, index, drawList);
+        var borderRectMin = imageMin - (Vector2.One * 2);
+        var borderRectMax = imageMax + (Vector2.One * 2);
+        drawList.AddRect(borderRectMin, borderRectMax, ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight), 10,
+                         ImDrawFlags.None, 4);
+
+        return (borderRectMin, borderRectMax);
+    }
+
+    private void RenderGCDAction(GCDActionNode actionNode, int index, ImDrawListPtr drawList)
+    {
+        RenderAction(drawList, actionNode, index);
     }
 
     private void RenderPrepullAction(PrePullActionNode actionNode, int index, ImDrawListPtr drawList)
     {
         ImGui.BeginGroup();
-        RenderAction(actionNode, index, drawList);
+        RenderAction(drawList, actionNode, index);
 
         var cursorPos = ImGui.GetCursorPos();
 
@@ -222,41 +218,26 @@ public class RotationBuilderRenderer : Screen
         ImGui.EndGroup();
     }
 
-    private void RenderAction(IActionNode actionNode, int index, ImDrawListPtr drawList)
+    protected override void RenderAction(ImDrawListPtr drawList, IActionNode actionNode, int index)
     {
-        var (size, type) = actionNode switch
+        var type = actionNode switch
         {
-            PrePullActionNode => (actionIconSize: ActionIconSize, ActionType.PREPULL),
-            Data.GCDActionNode => (actionIconSize: ActionIconSize, ActionType.GCD),
+            PrePullActionNode => ActionType.PREPULL,
+            GCDActionNode => ActionType.GCD,
             _ => throw new ArgumentException()
         };
 
-        ImGui.ImageButton(GetIconHandle(actionNode.Id), Vector2.One * size);
+        ImGui.ImageButton(FFAction.GetIconHandle(actionNode.Id), Vector2.One * ActionIconSize);
 
         if (ImGui.IsItemClicked())
         {
             OnActionClick.Invoke(new ActionClickEventArgs() { Index = index, Type = type });
         }
 
-        var borderRectMin = ImGui.GetItemRectMin() - (Vector2.One * 2);
-        var borderRectMax = ImGui.GetItemRectMax() + (Vector2.One * 2);
-        drawList.AddRect(borderRectMin, borderRectMax, ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight), 10,
-                         ImDrawFlags.None, 4);
+        var (borderRectMin, borderRectMax) =
+            DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax());
 
-        var borderRectWidth = borderRectMax.X - borderRectMin.X;
-        var borderRectCenter = borderRectMin.X + borderRectWidth / 2;
-
-        var actionName = FFAction.ById(actionNode.Id).Name;
-
-        var split = SplitActionName(actionName);
-
-        for (var i = 0; i < split.Length; i++)
-        {
-            var name = split[i];
-            var textSize = ImGui.CalcTextSize(name);
-            drawList.AddText(new Vector2(borderRectCenter - (textSize.X / 2), borderRectMax.Y + (25 * i)),
-                             ImGui.GetColorU32(ImGuiCol.Text), name);
-        }
+        RenderActionName(drawList, borderRectMax, borderRectMin, actionNode.Id, GCDActionFontSize, 0);
     }
 
     private static string[] SplitActionName(SeString actionName)
@@ -270,7 +251,7 @@ public class RotationBuilderRenderer : Screen
                 return new List<string>() { part };
             }
 
-            return new List<string>() { $"{part[..(sliceAmount)]}-", part[(sliceAmount)..] };
+            return new List<string> { $"{part[..(sliceAmount)]}-", part[(sliceAmount)..] };
         }).ToArray();
 
         return split;

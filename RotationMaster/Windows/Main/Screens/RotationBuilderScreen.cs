@@ -25,7 +25,6 @@ public class RotationBuilderScreen : Screen
 
             rotation = value;
             rotation.OnRotationChanged += OnRotationChange;
-            RotationBuilderRenderer.Rotation = rotation;
             ActionSearchDialog.Instance.Job = Job;
         }
     }
@@ -139,7 +138,7 @@ public class RotationBuilderScreen : Screen
         }
         else
         {
-            RotationBuilderRenderer.Render();
+            RotationBuilderRenderer.Render(rotation, 1);
         }
     }
 

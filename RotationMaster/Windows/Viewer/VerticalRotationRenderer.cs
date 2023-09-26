@@ -10,13 +10,11 @@ public class VerticalRotationRenderer : RotationRenderer
 {
     protected override int ActionBaseIconSize => 40;
 
-    public VerticalRotationRenderer(RotationViewerConfigSideWindow config) : base(config) { }
-
     protected override void RecalculateUiSizes()
     {
         base.RecalculateUiSizes();
 
-        actionMargin = actionIconSize * 0.2f;
+        ActionMargin = ActionIconSize * 0.2f;
     }
 
     /*
@@ -27,23 +25,24 @@ public class VerticalRotationRenderer : RotationRenderer
     {
         var drawList = ImGui.GetWindowDrawList();
 
-        foreach (var rotationNode in rotation.Nodes)
+        for (var index = 0; index < rotation.Nodes.Length; index++)
         {
+            var rotationNode = rotation.Nodes[index];
             switch (rotationNode)
             {
                 case GCDActionNode actionNode:
                 {
-                    RenderGCDAction(actionNode, drawList);
-                    ImGuiExt.IndentV(actionMargin);
+                    RenderGCDAction(drawList, actionNode, index);
+                    ImGuiExt.IndentV(ActionMargin);
                     break;
                 }
                 case OGCDActionsNode ogcdActionNode:
                 {
-                    RenderOGCDActions(ogcdActionNode, drawList);
+                    RenderOGCDActions(drawList, ogcdActionNode, index);
                     break;
                 }
                 case PrePullActionNode prePullActionNode:
-                    RenderPrepullAction(prePullActionNode, drawList);
+                    RenderPrepullAction(drawList, prePullActionNode, index);
                     break;
                 case PullIndicatorNode pullIndicatorNode:
                     RenderPullIndicator(drawList);
@@ -54,16 +53,16 @@ public class VerticalRotationRenderer : RotationRenderer
         ImGui.EndGroup();
     }
 
-    protected override void RenderPrepullAction(PrePullActionNode actionNode, ImDrawListPtr drawList)
+    protected override void RenderPrepullAction(ImDrawListPtr drawList, PrePullActionNode actionNode, int index)
     {
-        RenderAction(actionNode, drawList);
+        RenderAction(drawList, actionNode, index);
 
-        drawList.AddText(UiBuilder.DefaultFont, gcdActionFontSize, ImGui.GetItemRectMax(),
+        drawList.AddText(UiBuilder.DefaultFont, GCDActionFontSize, ImGui.GetItemRectMax(),
                          ImGui.GetColorU32(ImGuiCol.Text),
                          $"(-{actionNode.Time})");
     }
 
-    protected override void RenderOGCDActions(OGCDActionsNode ogcdaNode, ImDrawListPtr drawList) { }
+    protected override void RenderOGCDActions(ImDrawListPtr drawList, OGCDActionsNode ogcdaNode, int index) { }
 
     protected override void RenderActionName(
         ImDrawListPtr drawList, Vector2 imageMax, Vector2 imageMin, uint actionId, float fontSize, float xOffset,
@@ -82,13 +81,13 @@ public class VerticalRotationRenderer : RotationRenderer
     {
         var lastActionStartPosition = ImGui.GetItemRectMin();
 
-        ImGui.Dummy(pullBarSize.Transpose() * 2);
+        ImGui.Dummy(PullBarSize.Transpose() * 2);
         var dummySize = ImGui.GetItemRectMax() - ImGui.GetItemRectMin();
         var dummyCenter = ImGui.GetItemRectMax() - (dummySize / 2);
 
-        var position = new Vector2(lastActionStartPosition.X + (pullBarSize.Y / 2),
-                                   dummyCenter.Y - (pullBarSize.X / 2));
+        var position = new Vector2(lastActionStartPosition.X + (PullBarSize.Y / 2),
+                                   dummyCenter.Y - (PullBarSize.X / 2));
 
-        DrawUtils.RenderRotatedImage(Images.PullBarImage, 90f, pullBarSize, position);
+        DrawUtils.RenderRotatedImage(Images.PullBarImage, 90f, PullBarSize, position);
     }
 }

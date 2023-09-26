@@ -72,6 +72,7 @@ namespace RotationMaster
         public void Dispose()
         {
             this.WindowSystem.RemoveAllWindows();
+            Images.Dispose();
 
             foreach (var (command, (window, _)) in Commands)
             {

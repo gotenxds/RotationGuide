@@ -23,4 +23,11 @@ public static class Images
         var ogcdBarImage = Path.Combine(directoryFullName, "ogcdBar.png");
         OGCDBarImage = pluginInterface.UiBuilder.LoadImage(ogcdBarImage);
     }
+
+    public static void Dispose()
+    {
+        PullBarImage.Dispose();
+        ActionIconBorderImage.Dispose();
+        OGCDBarImage.Dispose();
+    }
 }
