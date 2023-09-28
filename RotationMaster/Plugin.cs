@@ -67,6 +67,8 @@ namespace RotationMaster
 
             PluginInterface.UiBuilder.Draw += DrawUI;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+            
+            
         }
 
         public void Dispose()

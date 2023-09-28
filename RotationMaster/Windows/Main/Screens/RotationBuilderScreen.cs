@@ -38,7 +38,7 @@ public class RotationBuilderScreen : Screen
 
     public RotationBuilderScreen()
     {
-        RotationBuilderFooter = new RotationBuilderFooter(() => !Rotation.HasPullIndicator);
+        RotationBuilderFooter = new RotationBuilderFooter(() => !Rotation.HasPullIndicator, () => Rotation.Nodes.Length == 0);
         RotationBuilderRenderer = new RotationBuilderRenderer();
 
         RotationBuilderFooter.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);

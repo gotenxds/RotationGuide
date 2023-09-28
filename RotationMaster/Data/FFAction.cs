@@ -41,6 +41,11 @@ public static class FFAction
         return false;
     }
 
+    public static bool Exists(uint id)
+    {
+        return actionsById.ContainsKey(id);
+    }
+
     private static void TryInit()
     {
         if (actionsById.Count == 0)

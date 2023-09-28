@@ -33,13 +33,26 @@ public struct OGCDClickEventArgs
 
 public class RotationBuilderRenderer : RotationRenderer
 {
+    public RotationBuilderRenderer()
+    {
+        contextMenu = new RotationBuilderContextMenu();
+    }
+
     public event Action<ActionClickEventArgs> OnActionClick;
     public event Action<OGCDClickEventArgs> OnOGCDClick;
 
     private int currentlyEditingActionTime = -1;
     private bool shouldFocusActionTimeEditor = false;
     private Rotation Rotation;
+    private RotationBuilderContextMenu contextMenu;
     public bool IsEditing => currentlyEditingActionTime != -1;
+
+    public override void Render(Rotation rotation, float uiScale, bool hideActionNames = false)
+    {
+        base.Render(rotation, uiScale, hideActionNames);
+
+        contextMenu.Render(rotation);
+    }
 
     protected override void RenderRotation(Rotation rotation)
     {
@@ -84,7 +97,7 @@ public class RotationBuilderRenderer : RotationRenderer
                     ImGui.SameLine(0, ActionMargin);
                     break;
                 case PullIndicatorNode pullIndicatorNode:
-                    RenderPullIndicator(drawList);
+                    RenderPullIndicator(drawList, pullIndicatorNode, index);
 
                     ImGui.SameLine(0, ActionMargin);
                     break;
@@ -163,6 +176,11 @@ public class RotationBuilderRenderer : RotationRenderer
             {
                 OnOGCDClick.Invoke(new OGCDClickEventArgs() { Index = index, InnerIndex = innerIndex });
             }
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+            {
+                PluginLog.Debug("click");
+                contextMenu.Open(actionsNode, index, innerIndex);
+            }
         }
 
         ImGui.SetCursorScreenPos(new Vector2(itemRectMax.X + 2, cursorScreenPositionToReturnTo.Y));
@@ -240,6 +258,11 @@ public class RotationBuilderRenderer : RotationRenderer
             OnActionClick.Invoke(new ActionClickEventArgs() { Index = index, Type = type });
         }
 
+        if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+        {
+            contextMenu.Open(actionNode, index);
+        }
+
         var borderColor = ImGui.GetColorU32(ImGuiCol.NavWindowingHighlight);
 
         if (ImGui.IsItemHovered())
@@ -253,31 +276,19 @@ public class RotationBuilderRenderer : RotationRenderer
         RenderActionName(drawList, borderRectMax, borderRectMin, actionNode.Id, GCDActionFontSize, 0);
     }
 
-    private static string[] SplitActionName(SeString actionName)
-    {
-        var split = actionName.RawString.Split(" ").SelectMany(part =>
-        {
-            const int max = 8;
-            const int sliceAmount = max - 1;
-            if (part.Length <= max)
-            {
-                return new List<string>() { part };
-            }
-
-            return new List<string> { $"{part[..(sliceAmount)]}-", part[(sliceAmount)..] };
-        }).ToArray();
-
-        return split;
-    }
-
-    private void RenderPullIndicator(ImDrawListPtr drawList)
+    protected override void RenderPullIndicator(ImDrawListPtr drawList, PullIndicatorNode node, int index)
     {
         ImGuiExt.IndentV(Images.PullBarImage.Height * -0.25f);
-        ImGui.Image(Images.PullBarImage.ImGuiHandle,
-                    new Vector2(Images.PullBarImage.Width, Images.PullBarImage.Height));
+        var imagePosition = new Vector2(Images.PullBarImage.Width, Images.PullBarImage.Height);
+        ImGui.Image(Images.PullBarImage.ImGuiHandle, imagePosition, Vector2.Zero, Vector2.One);
 
         var pullBarRectMin = ImGui.GetItemRectMin();
         drawList.AddText(new Vector2(pullBarRectMin.X - 25, pullBarRectMin.Y - 35), ImGui.GetColorU32(Vector4.One),
                          "PULL");
+        
+        if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
+        {
+            contextMenu.Open(node, index);
+        }
     }
 }

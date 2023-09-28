@@ -79,6 +79,50 @@ public class Rotation
         OnRotationChanged(this);
     }
 
+    public void InsertNode(IRotationNode node, int index)
+    {
+        var pullIndicatorIndex = HasPullIndicator ? nodes.FindIndex(n => n is PullIndicatorNode) : -1;
+
+        switch (node)
+        {
+            case PrePullActionNode when HasPullIndicator && index > pullIndicatorIndex:
+                throw new ArgumentException("PrePull nodes needs to be before pull indicators");
+            case PrePullActionNode:
+                nodes.Insert(index, node);
+                break;
+            case PullIndicatorNode when HasPullIndicator:
+                throw new ArgumentException("Already have pull indicator");
+            case PullIndicatorNode when nodes.FindLastIndex(n => n is PrePullActionNode) > index:
+                throw new ArgumentException("Cant put pull indicator after pre pull action");
+            case PullIndicatorNode:
+                nodes.Insert(index, node);
+                HasPullIndicator = true;
+                break;
+            case OGCDActionsNode:
+                throw new ArgumentException("OGCD are unsupported for insert");
+            case GCDActionNode actionNode:
+                if (index == nodes.Count)
+                {
+                    AddAction(actionNode);
+                }
+                else if (nodes[index] is GCDActionNode)
+                {
+                    nodes.InsertRange(index, new []{ node, new OGCDActionsNode() });
+                }
+                else if (index != 0 && nodes[index - 1] is GCDActionNode)
+                {
+                    nodes.InsertRange(index, new []{ new OGCDActionsNode(), node });
+                }
+                else
+                {
+                    nodes.Insert(index, node);
+                }
+                break;
+        }
+        
+        OnRotationChanged(this);
+    }
+
     public void ReplaceActionNode(int index, IActionNode actionNode)
     {
         if (nodes[index].GetType() != actionNode.GetType())
@@ -87,6 +131,49 @@ public class Rotation
         }
 
         nodes[index] = actionNode;
+        OnRotationChanged(this);
+    }
+
+    public void RemoveNode(int index)
+    {
+        var node = nodes[index];
+        switch (node)
+        {
+            case OGCDActionsNode:
+                throw new ArgumentException("Cant remove OGCDActionsNode");
+            case GCDActionNode when index != (nodes.Count - 1) && nodes[index + 1] is OGCDActionsNode:
+                throw new ArgumentException("Cant remove GCDActionNode that has an OGCDActionsNode after it");
+            case GCDActionNode:
+            {
+                nodes.RemoveAt(index);
+
+                if (index != 0 && nodes[index - 1] is OGCDActionsNode)
+                {
+                    nodes.RemoveAt(index - 1);
+                }
+
+                break;
+            }
+            case PullIndicatorNode:
+                if (index != 0 && nodes[index - 1] is GCDActionNode && index != nodes.Count -1 && nodes[index + 1] is GCDActionNode)
+                {
+                    nodes.RemoveAt(index);
+                    nodes.Insert(index, new OGCDActionsNode());
+                }
+                else
+                {
+                    nodes.RemoveAt(index);
+                }
+
+                HasPullIndicator = false;
+                break;
+            default:
+            {
+                nodes.RemoveAt(index);
+                break;
+            }
+        }
+
         OnRotationChanged(this);
     }
 
@@ -103,12 +190,6 @@ public class Rotation
         {
             throw new ArgumentException("Trying to update a non ogcd node");
         }
-    }
-
-    public void RemoveActionNode(int index)
-    {
-        nodes.RemoveAt(index);
-        OnRotationChanged(this);
     }
 }
 
@@ -162,7 +243,7 @@ public struct PrePullActionNode : IActionNode
     public int Time
     {
         get => time;
-        set => time = value;
+        set => time = Math.Clamp(value, -120, 0);
     }
 }
 

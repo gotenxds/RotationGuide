@@ -25,8 +25,8 @@ public class ImGuiExt
         return cursorPos.X < 0 || cursorPos.Y < 0 || cursorPos.X > windowSize.X || cursorPos.Y > windowSize.Y;
     }
 
-    public static float CalcTextSize(string str, float fontSize)
+    public static bool IsMenuHovered()
     {
-        return fontSize * str.Length;
+        return ImGui.IsMouseHoveringRect(ImGui.GetItemRectMin(), ImGui.GetItemRectMax());
     }
 }

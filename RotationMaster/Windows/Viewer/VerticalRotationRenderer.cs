@@ -45,7 +45,7 @@ public class VerticalRotationRenderer : RotationRenderer
                     RenderPrepullAction(drawList, prePullActionNode, index);
                     break;
                 case PullIndicatorNode pullIndicatorNode:
-                    RenderPullIndicator(drawList);
+                    RenderPullIndicator(drawList, pullIndicatorNode, index);
                     break;
             }
         }
@@ -77,7 +77,7 @@ public class VerticalRotationRenderer : RotationRenderer
                          text);
     }
 
-    protected override void RenderPullIndicator(ImDrawListPtr drawList)
+    protected override void RenderPullIndicator(ImDrawListPtr drawList, PullIndicatorNode node, int index)
     {
         var lastActionStartPosition = ImGui.GetItemRectMin();
 

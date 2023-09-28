@@ -96,7 +96,7 @@ public class RotationRenderer
                     ImGui.SameLine(0, ActionMargin);
                     break;
                 case PullIndicatorNode pullIndicatorNode:
-                    RenderPullIndicator(drawList);
+                    RenderPullIndicator(drawList, pullIndicatorNode, index);
 
                     ImGui.SameLine(0, ActionMargin);
                     break;
@@ -205,7 +205,7 @@ public class RotationRenderer
         }
     }
 
-    protected virtual void RenderPullIndicator(ImDrawListPtr drawList)
+    protected virtual void RenderPullIndicator(ImDrawListPtr drawList,  PullIndicatorNode node, int index)
     {
         ImGuiExt.IndentV(PullBarSize.Y * -0.25f);
         ImGui.Image(Images.PullBarImage.ImGuiHandle, PullBarSize);

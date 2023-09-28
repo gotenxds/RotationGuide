@@ -10,15 +10,18 @@ public class RotationBuilderFooter
     public event Action OnAddPrePullActionClicked;
     public event Action OnAddActionClicked;
     public event Action OnAddPullBarClicked;
+    public event Action OnDeleteLastItem;
 
     private Func<bool> enablePullActions;
+    private Func<bool> isEmpty;
 
     private WindowFooter footer;
 
-    public RotationBuilderFooter(Func<bool> enablePullActions)
+    public RotationBuilderFooter(Func<bool> enablePullActions, Func<bool> isEmpty)
     {
         footer = new WindowFooter("Tools", RenderChild);
         this.enablePullActions = enablePullActions;
+        this.isEmpty = isEmpty;
     }
 
     public void Render()
@@ -35,11 +38,23 @@ public class RotationBuilderFooter
 
     private void RenderButtons()
     {
+        RenderPullButtons();
+        
+        ImGui.SameLine();
+        if (ImGui.Button("Action"))
+        {
+            OnAddActionClicked.Invoke();
+        }
+    }
+    
+    private void RenderPullButtons()
+    {
         if (!enablePullActions())
         {
             ImGui.BeginDisabled();
         }
 
+        
         if (ImGui.Button("PrePull Action"))
         {
             OnAddPrePullActionClicked.Invoke();
@@ -64,16 +79,10 @@ public class RotationBuilderFooter
             ImGui.Text("Pull bar already placed");
             ImGui.EndTooltip();
         }
-
+        
         if (!enablePullActions())
         {
             ImGui.EndDisabled();
-        }
-
-        ImGui.SameLine();
-        if (ImGui.Button("Action"))
-        {
-            OnAddActionClicked.Invoke();
         }
     }
 }

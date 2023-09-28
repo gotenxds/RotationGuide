@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: moved the builder to work with the rotation renderer">
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: added border color for hovered buttons in rotation builder">
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderContextMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Data/FFAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Data/FFAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Data/Rotation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Data/Rotation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Plugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Plugin.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderFooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderFooter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/MainWindow.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/VerticalRotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/VerticalRotationRenderer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,6 +23,8 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/34d4b6d75dae43b080eeda4e11abf4ee3d010/65/ca13019f/LazyRow`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/14/28a87b39/GameFontHandle.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/21/f95c090c/ICommandManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/57/c95db9cb/ChatGui.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/90/d90c6386/UiBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/9b/1e12974b/GameFontFamilyAndSize.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/a2/8c9f3340/InterfaceManager.cs" root0="SKIP_HIGHLIGHTING" />
@@ -20,6 +33,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/db/818d4230/Window.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/dd/a9c244a4/Easing.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/e1/b52f4aa7/ImGuiHelpers.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/ed/ddcd7bf9/IDataManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/f9/2e085509/WindowSystem.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/04/bc0d08f7/ImGuiNative.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cdb25906f45248baac5d91f7c356aeb38ae10/21/a59b83e2/ImDrawListPtr.cs" root0="SKIP_HIGHLIGHTING" />
@@ -69,7 +83,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="66989000" />
+      <workItem from="1695527644520" duration="88307000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -141,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695731657770</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="feat: added border color for hovered buttons in rotation builder">
+      <created>1695731909354</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1695731909354</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,6 +190,7 @@
     <MESSAGE value="feat: moved routing logic to a dedicated router class" />
     <MESSAGE value="feat: Finished the horizontal viewer for now" />
     <MESSAGE value="feat: moved the builder to work with the rotation renderer" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: moved the builder to work with the rotation renderer" />
+    <MESSAGE value="feat: added border color for hovered buttons in rotation builder" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: added border color for hovered buttons in rotation builder" />
   </component>
 </project>
