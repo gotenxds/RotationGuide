@@ -17,6 +17,7 @@ public class RotationBuilderContextMenu
     private int currentIndex;
     private int currentInnerIndex;
     private bool awaitingToStartSelection;
+    private RotationMasterActionType typeToFilterSelectionBy;
     private Action<Task<Action>> onSelectionFinish;
 
     public void Render(Rotation rotation)
@@ -47,10 +48,10 @@ public class RotationBuilderContextMenu
         // This is a workaround to make the dialog pop regardless of where we clicked in the popup hierarchy 
         if (awaitingToStartSelection)
         {
-            ActionSearchDialog.Instance.Open().ContinueWith(onSelectionFinish);
+            ActionSearchDialog.Instance.Open(typeToFilterSelectionBy).ContinueWith(onSelectionFinish);
             awaitingToStartSelection = false;
         }
-        ActionSearchDialog.Instance.Render();
+        // ActionSearchDialog.Instance.Render();
     }
 
     public void Open(IRotationNode node, int index, int innerIndex = -1)
@@ -62,8 +63,9 @@ public class RotationBuilderContextMenu
         ImGui.OpenPopup(PopupName);
     }
 
-    private void StartSelection(Action<Task<Action>> onFinish)
+    private void StartSelection(Action<Task<Action>> onFinish, RotationMasterActionType actionType = RotationMasterActionType.NA)
     {
+        typeToFilterSelectionBy = actionType;
         awaitingToStartSelection = true;
         onSelectionFinish = onFinish;
     } 

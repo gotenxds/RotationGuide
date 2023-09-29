@@ -54,7 +54,7 @@ public class RotationBuilderScreen : Screen
 
         RotationBuilderRenderer.OnOGCDClick += async actionClickEventArgs =>
         {
-            var action = await ActionSearchDialog.Instance.Open();
+            var action = await ActionSearchDialog.Instance.Open(RotationMasterActionType.OGCD);
 
             OnOGCDSelected(action, actionClickEventArgs.Index, actionClickEventArgs.InnerIndex);
         };

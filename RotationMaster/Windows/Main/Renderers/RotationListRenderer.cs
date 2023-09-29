@@ -161,7 +161,6 @@ public class RotationListRenderer
         ImGui.PushID($"{rotation.Id}_view");
         if (ImGui.Button(FontAwesomeIcon.Eye.ToIconString(), Vector2.One * ActionButtonSize))
         {
-            PluginLog.Debug("sd");
             Plugin.RotationViewerWindow.IsOpen = true;
             Plugin.RotationViewerWindow.Rotation = rotation;
 

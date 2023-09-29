@@ -45,7 +45,6 @@ public class RotationBuilderRenderer : RotationRenderer
     private bool shouldFocusActionTimeEditor = false;
     private Rotation Rotation;
     private RotationBuilderContextMenu contextMenu;
-    public bool IsEditing => currentlyEditingActionTime != -1;
 
     public override void Render(Rotation rotation, float uiScale, bool hideActionNames = false)
     {
@@ -58,7 +57,7 @@ public class RotationBuilderRenderer : RotationRenderer
     {
         Rotation = rotation;
         var drawList = ImGui.GetWindowDrawList();
-        var columnHeight = 4 * ActionIconSize;
+        var columnHeight = 5 * ActionIconSize;
         var startingPosition = ImGui.GetCursorPos();
 
         var originalItemSpacingX = ImGui.GetStyle().ItemSpacing.X;
@@ -69,7 +68,8 @@ public class RotationBuilderRenderer : RotationRenderer
         ImGui.BeginGroup();
         for (var index = 0; index < rotation.Nodes.Length; index++)
         {
-            if (ImGuiExt.IsOverflowing(new Vector2(100, 0)) && ImGui.GetContentRegionAvail().Y > 450)
+            PluginLog.Debug($"Rendering node {ImGui.GetContentRegionAvail().Y}");
+            if (ImGuiExt.IsOverflowing(new Vector2(100, 0)) && ImGui.GetContentRegionAvail().Y > columnHeight * 1.8f)
             {
                 // This logic "closes" the row and forces starting a new one, warping the the rotation 
                 ImGui.EndGroup();
@@ -160,7 +160,7 @@ public class RotationBuilderRenderer : RotationRenderer
                 var (borderRectMin, borderRectMax) =
                     DrawBorderAroundAction(drawList, ImGui.GetItemRectMin(), ImGui.GetItemRectMax(), borderColor);
 
-                RenderActionName(drawList, borderRectMax, borderRectMin, actionId, OGCDActionFontSize, 15,
+                RenderActionName(drawList, borderRectMax, borderRectMin, actionId, OGCDActionFontSize, 0,
                                  innerIndex != 1);
             }
             else

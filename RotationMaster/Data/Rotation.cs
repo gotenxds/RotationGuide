@@ -243,7 +243,7 @@ public struct PrePullActionNode : IActionNode
     public int Time
     {
         get => time;
-        set => time = Math.Clamp(value, -120, 0);
+        set => time = Math.Clamp(Math.Abs(value) * -1, -120, 0);
     }
 }
 

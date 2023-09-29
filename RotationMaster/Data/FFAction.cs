@@ -1,10 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Dalamud.Plugin.Services;
 using Action = Lumina.Excel.GeneratedSheets.Action;
 
 namespace RotationMaster.Data;
+
+public enum RotationMasterActionType
+{
+    AutoAttack,
+    GCD,
+    OGCD,
+    Item,
+    NA
+}
 
 public static class FFAction
 {
@@ -70,4 +80,13 @@ public static class FFAction
 
         return split;
     }
+
+    public static RotationMasterActionType GetActionType(this Action action) =>
+        action.ActionCategory?.Row switch
+        {
+            1 => RotationMasterActionType.AutoAttack,
+            2 or 3 => RotationMasterActionType.GCD,
+            4 => RotationMasterActionType.OGCD,
+            _ => RotationMasterActionType.NA
+        };
 }

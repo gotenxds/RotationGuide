@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using ImGuiNET;
+using RotationMaster.Utils;
 
 namespace RotationMaster.Windows;
 

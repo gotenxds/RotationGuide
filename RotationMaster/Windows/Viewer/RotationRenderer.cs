@@ -1,6 +1,7 @@
 using System;
 using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Logging;
 using ImGuiNET;
 using RotationMaster.Data;
 using RotationMaster.Utils;
@@ -194,10 +195,10 @@ public class RotationRenderer
         for (var i = 0; i < split.Length; i++)
         {
             var name = split[i];
-            var textSize = ImGui.CalcTextSize(name) * UIScale;
+            var textSize = ImGuiExt.CalcTextSize(name, UIScale, UiBuilder.DefaultFont, fontSize / UIScale);
             var textYPosition = reverse ? imageMin.Y - (fontSize * (split.Length - i)) : imageMax.Y + (fontSize * i);
 
-            var textPosition = new Vector2(rectCenter.X - (textSize.X / 2) + (xOffset * UIScale), textYPosition);
+            var textPosition = new Vector2(rectCenter.X - (textSize.X / 2), textYPosition);
 
             drawList.AddText(UiBuilder.DefaultFont, fontSize, textPosition,
                              ImGui.GetColorU32(ImGuiCol.Text),

@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dalamud.Game;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
+using Dalamud.Logging;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
+using RotationMaster.Data;
+using RotationMaster.Services;
 using RotationMaster.Utils;
 using RotationMaster.Windows;
 using RotationMaster.Windows.Viewer;
@@ -34,7 +38,10 @@ namespace RotationMaster
             [RequiredVersion("1.0")] ICommandManager commandManager,
             [RequiredVersion("1.0")] ChatGui chatGui,
             [RequiredVersion("1.0")] ITextureProvider textureProvider,
-            [RequiredVersion("1.0")] IDataManager dataManager)
+            [RequiredVersion("1.0")] IDataManager dataManager,
+            [RequiredVersion("1.0")] ISigScanner sigScanner,
+            [RequiredVersion("1.0")] IClientState clientState
+        )
         {
             this.CommandManager = commandManager;
             PluginInterface = pluginInterface;
@@ -48,6 +55,7 @@ namespace RotationMaster
 
             Fonts.Init(UiBuilder);
             Images.Init(pluginInterface);
+            PlayerListenerService.Init(sigScanner, clientState); ;
 
             RotationViewerWindow = new RotationViewerWindow();
 
@@ -75,6 +83,7 @@ namespace RotationMaster
         {
             this.WindowSystem.RemoveAllWindows();
             Images.Dispose();
+            PlayerListenerService.Instance?.Dispose();
 
             foreach (var (command, (window, _)) in Commands)
             {

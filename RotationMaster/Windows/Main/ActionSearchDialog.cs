@@ -6,6 +6,7 @@ using Dalamud.Interface;
 using Dalamud.Logging;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
+using RotationMaster.Data;
 using RotationMaster.Utils;
 
 namespace RotationMaster.Windows;
@@ -21,12 +22,13 @@ public class ActionSearchDialog
 
     private string searchString = "";
     private bool focusOnSearch = false;
-
+    private RotationMasterActionType actionTypeToFilter = RotationMasterActionType.NA;
+    
     private List<Action> actions;
     private ClassJob job;
     private TaskCompletionSource<Action> selectedActionTask;
     private bool isOpen = false;
-    
+
     public static ActionSearchDialog Instance { get; private set; } = new();
 
     private ActionSearchDialog() { }
@@ -40,9 +42,15 @@ public class ActionSearchDialog
             FilterActions();
         }
     }
-
-    public Task<Action> Open()
+    
+    public Task<Action> Open(RotationMasterActionType actionType = RotationMasterActionType.NA)
     {
+        if (actionType != actionTypeToFilter)
+        {
+            actionTypeToFilter = actionType;
+            FilterActions();
+        }
+        
         ImGui.OpenPopup(ActionSearchDialogId);
         isOpen = true;
         focusOnSearch = true;
@@ -83,7 +91,7 @@ public class ActionSearchDialog
         }
         
         ImGui.SetNextItemWidth(ImGui.GetWindowWidth());
-        if (ImGui.InputTextWithHint("", "Action name", ref searchString, 30))
+        if (ImGui.InputTextWithHint("##action_search_dialog", "Action name", ref searchString, 30))
         {
             FilterActions();
         }
@@ -92,7 +100,11 @@ public class ActionSearchDialog
     private void FilterActions()
     {
         actions = Plugin.DataManager.GetExcelSheet<Action>()
-              .Where(a => !a.IsPvP && a.ClassJob.Value?.Name == Job.Name && a.Name.RawString.ToLower().Contains(searchString.ToLower()))
+              .Where(a => 
+                         !a.IsPvP 
+                         && a.ClassJob.Value?.Name == Job.Name 
+                         && a.Name.RawString.ToLower().Contains(searchString.ToLower())
+                         && (actionTypeToFilter == RotationMasterActionType.NA || a.GetActionType() == actionTypeToFilter))
               .ToList();
     }
     
