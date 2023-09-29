@@ -32,18 +32,33 @@ public class RotationBuilderScreen : Screen
     public ClassJob Job => Data.Job.GetJob(rotation.JobId);
 
     private RotationBuilderRenderer RotationBuilderRenderer { get; init; }
+    private RotationRecorder RotationRecorder { get; init; }
     private Rotation rotation;
-    private bool isEditingName = false;
+    private bool isEditingName;
+    private bool isRecording;
+    
     private RotationBuilderFooter RotationBuilderFooter { get; init; }
 
     public RotationBuilderScreen()
     {
-        RotationBuilderFooter = new RotationBuilderFooter(() => !Rotation.HasPullIndicator, () => Rotation.Nodes.Length == 0);
+        RotationBuilderFooter = new RotationBuilderFooter(() => !Rotation.HasPullIndicator, () => isRecording);
         RotationBuilderRenderer = new RotationBuilderRenderer();
-
+        RotationRecorder = new RotationRecorder();
+        
         RotationBuilderFooter.OnAddActionClicked += () => OnAddActionClicked(ActionType.GCD);
         RotationBuilderFooter.OnAddPrePullActionClicked += () => OnAddActionClicked(ActionType.PREPULL);
         RotationBuilderFooter.OnAddPullBarClicked += () => rotation.AddPullIndicator();
+        RotationBuilderFooter.OnStartRecording += () =>
+        {
+            RotationRecorder.RecordInto(rotation!);
+            isRecording = true;
+        };
+        
+        RotationBuilderFooter.OnStopRecording += () =>
+        {
+            RotationRecorder.Stop();
+            isRecording = false;
+        };
 
         RotationBuilderRenderer.OnActionClick += async actionClickEventArgs =>
         {
@@ -113,14 +128,29 @@ public class RotationBuilderScreen : Screen
 
         RenderTitle();
 
-        ImGuiExt.IndentV(100);
+        ImGuiExt.IndentV(120);
 
         RenderRotation();
 
         ImGui.EndGroup();
 
+        RenderRecordingOverlay();
+
         ActionSearchDialog.Instance.Render();
         RotationBuilderFooter.Render();
+    }
+
+    private void RenderRecordingOverlay()
+    {
+        if (!isRecording)
+        {
+            return;
+        }
+
+        var drawList = ImGui.GetWindowDrawList();
+
+        var recordPosition = new Vector2(90, 200).ToWindowPositions();
+        drawList.AddCircleFilled(recordPosition, 20, Colors.Recording);
     }
 
     private void RenderRotation()
@@ -138,7 +168,15 @@ public class RotationBuilderScreen : Screen
         }
         else
         {
+            if (isRecording)
+            {
+                ImGui.BeginDisabled();
+            }
             RotationBuilderRenderer.Render(rotation, 1);
+            if (isRecording)
+            {
+                ImGui.EndDisabled();
+            }
         }
     }
 
@@ -172,7 +210,12 @@ public class RotationBuilderScreen : Screen
         else
         {
             Fonts.WriteWithFont(Fonts.Jupiter23, rotation.Name != "" ? rotation.Name : "Rotation name");
-
+            
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip("Click me to edit the rotation name!");
+            }
+            
             if (ImGui.IsItemClicked())
             {
                 isEditingName = true;

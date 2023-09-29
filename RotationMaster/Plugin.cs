@@ -56,6 +56,7 @@ namespace RotationMaster
             Fonts.Init(UiBuilder);
             Images.Init(pluginInterface);
             PlayerListenerService.Init(sigScanner, clientState); ;
+            CountDownService.Init(sigScanner);
 
             RotationViewerWindow = new RotationViewerWindow();
 
@@ -75,8 +76,6 @@ namespace RotationMaster
 
             PluginInterface.UiBuilder.Draw += DrawUI;
             PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
-            
-            
         }
 
         public void Dispose()
@@ -84,6 +83,7 @@ namespace RotationMaster
             this.WindowSystem.RemoveAllWindows();
             Images.Dispose();
             PlayerListenerService.Instance?.Dispose();
+            CountDownService.Instance?.Dispose();
 
             foreach (var (command, (window, _)) in Commands)
             {

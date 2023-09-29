@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="feat: added context menu for the builder with more building options">
-      <change afterPath="$PROJECT_DIR$/RotationMaster/Services/PlayerListenerService.cs" afterDir="false" />
+    <list default="true" id="3cc7dc1a-be28-40bd-8b33-1a827441d6cb" name="Changes" comment="fix: fixed font scaling issues, fonts overlaping issues, action search bar not focusing issue.">
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Services/CountDownService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotationMaster/Services/RotationRecorder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.RotationGuide/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Data/FFAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Data/FFAction.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RotationMaster/Data/Rotation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Data/Rotation.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RotationMaster/Plugin.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Plugin.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/ImGuiExt.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Components/WindowFooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Components/WindowFooter.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/ActionSearchDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/ActionSearchDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderContextMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderContextMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Services/PlayerListenerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Services/PlayerListenerService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/Colors.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/Colors.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Utils/DrawUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Utils/DrawUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderFooter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderFooter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationBuilderRenderer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationListRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Renderers/RotationListRenderer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Main/Screens/RotationBuilderScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RotationMaster/Windows/Viewer/RotationRenderer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +29,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/a2/8c9f3340/InterfaceManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/a4/8c42981b/FontAwesomeHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/c1/3f80ea46/DalamudPluginInterface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/c6/400251ac/SignatureAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/db/818d4230/Window.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/dd/7da2d68a/Hook`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/dd/a9c244a4/Easing.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/e1/b52f4aa7/ImGuiHelpers.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/51a0a2661731439c840316222ff09db4185210/ed/ddcd7bf9/IDataManager.cs" root0="SKIP_HIGHLIGHTING" />
@@ -86,7 +86,7 @@
       <updated>1694917252050</updated>
       <workItem from="1694917256789" duration="240903000" />
       <workItem from="1695527297490" duration="74000" />
-      <workItem from="1695527644520" duration="108467000" />
+      <workItem from="1695527644520" duration="126329000" />
     </task>
     <task id="LOCAL-00001" summary="init">
       <created>1695089127416</created>
@@ -172,7 +172,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695916861505</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fix: fixed font scaling issues, fonts overlaping issues, action search bar not focusing issue.">
+      <created>1695949115369</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1695949115369</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -202,6 +209,7 @@
     <MESSAGE value="feat: moved the builder to work with the rotation renderer" />
     <MESSAGE value="feat: added border color for hovered buttons in rotation builder" />
     <MESSAGE value="feat: added context menu for the builder with more building options" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: added context menu for the builder with more building options" />
+    <MESSAGE value="fix: fixed font scaling issues, fonts overlaping issues, action search bar not focusing issue." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: fixed font scaling issues, fonts overlaping issues, action search bar not focusing issue." />
   </component>
 </project>

@@ -78,6 +78,7 @@ public class PlayerListenerService : IDisposable
 
     public void Dispose()
     {
+        onActionUsedHook?.Disable();
         onActionUsedHook?.Dispose();
     }
 }

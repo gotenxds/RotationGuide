@@ -7,14 +7,7 @@ namespace RotationMaster.Utils;
 
 public static class DrawUtils
 {
-    public static Vector2 ToWindowPositions(Vector2 position)
-    {
-        var winPosition = ImGui.GetWindowPos();
-
-        return new Vector2(winPosition.X + position.X, winPosition.Y + position.Y);
-    }
-    
-    public static Vector2 ToScreenSpace(Vector2 position)
+    public static Vector2 ToWindowPositions(this Vector2 position)
     {
         var winPosition = ImGui.GetWindowPos();
 

@@ -99,7 +99,8 @@ public class Rotation
                 HasPullIndicator = true;
                 break;
             case OGCDActionsNode:
-                throw new ArgumentException("OGCD are unsupported for insert");
+                nodes.Insert(index, node);
+                break;
             case GCDActionNode actionNode:
                 if (index == nodes.Count)
                 {
@@ -107,19 +108,20 @@ public class Rotation
                 }
                 else if (nodes[index] is GCDActionNode)
                 {
-                    nodes.InsertRange(index, new []{ node, new OGCDActionsNode() });
+                    nodes.InsertRange(index, new[] { node, new OGCDActionsNode() });
                 }
                 else if (index != 0 && nodes[index - 1] is GCDActionNode)
                 {
-                    nodes.InsertRange(index, new []{ new OGCDActionsNode(), node });
+                    nodes.InsertRange(index, new[] { new OGCDActionsNode(), node });
                 }
                 else
                 {
                     nodes.Insert(index, node);
                 }
+
                 break;
         }
-        
+
         OnRotationChanged(this);
     }
 
@@ -155,7 +157,8 @@ public class Rotation
                 break;
             }
             case PullIndicatorNode:
-                if (index != 0 && nodes[index - 1] is GCDActionNode && index != nodes.Count -1 && nodes[index + 1] is GCDActionNode)
+                if (index != 0 && nodes[index - 1] is GCDActionNode && index != nodes.Count - 1 &&
+                    nodes[index + 1] is GCDActionNode)
                 {
                     nodes.RemoveAt(index);
                     nodes.Insert(index, new OGCDActionsNode());
@@ -217,14 +220,7 @@ public struct GCDActionNode : IActionNode
 
 public struct OGCDActionsNode : IRotationNode
 {
-    private uint[] ids = { uint.MaxValue, uint.MaxValue, uint.MaxValue };
-
-    [JsonInclude]
-    public uint[] Ids
-    {
-        get => ids;
-        private set => ids = value;
-    }
+    public uint[] Ids { get; set; } = { uint.MaxValue, uint.MaxValue, uint.MaxValue };
 
     public OGCDActionsNode() { }
 }

@@ -68,7 +68,6 @@ public class RotationBuilderRenderer : RotationRenderer
         ImGui.BeginGroup();
         for (var index = 0; index < rotation.Nodes.Length; index++)
         {
-            PluginLog.Debug($"Rendering node {ImGui.GetContentRegionAvail().Y}");
             if (ImGuiExt.IsOverflowing(new Vector2(100, 0)) && ImGui.GetContentRegionAvail().Y > columnHeight * 1.8f)
             {
                 // This logic "closes" the row and forces starting a new one, warping the the rotation 
